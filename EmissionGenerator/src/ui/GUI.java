@@ -13,16 +13,30 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.JTextPane;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
+
+import org.uncommons.maths.number.NumberGenerator;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
+import data.ConfounderFactory;
+import data.model.Model;
+import data.model.ModelFactory;
+
 public class GUI {
 
 	private JFrame frmEmissiongenerator;
+	private JSpinner spinnerSize;
+	private JComboBox comboModel;
+	private JComboBox comboConfounder;
+	private ModelFactory modelFactory;
+	private ConfounderFactory confounderFactory;
+	private Model model;
+	private NumberGenerator<?> confounder;
 
 	/**
 	 * Launch the application.
@@ -56,21 +70,21 @@ public class GUI {
 	private void initialize() {
 		this.frmEmissiongenerator = new JFrame();
 		this.frmEmissiongenerator.setTitle("EmissionGenerator");
-		this.frmEmissiongenerator.setBounds(100, 100, 450, 300);
+		this.frmEmissiongenerator.setBounds(100, 100, 600, 300);
 		this.frmEmissiongenerator
 				.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frmEmissiongenerator.getContentPane().setLayout(
 				new FormLayout(new ColumnSpec[] {
 						FormFactory.RELATED_GAP_COLSPEC,
+						ColumnSpec.decode("max(48dlu;default)"),
+						FormFactory.RELATED_GAP_COLSPEC,
+						ColumnSpec.decode("max(66dlu;default)"),
+						FormFactory.RELATED_GAP_COLSPEC,
+						ColumnSpec.decode("max(40dlu;default)"),
+						FormFactory.RELATED_GAP_COLSPEC,
+						ColumnSpec.decode("max(61dlu;default)"),
+						FormFactory.RELATED_GAP_COLSPEC,
 						ColumnSpec.decode("default:grow"),
-						FormFactory.RELATED_GAP_COLSPEC,
-						ColumnSpec.decode("max(90dlu;default):grow"),
-						FormFactory.RELATED_GAP_COLSPEC,
-						FormFactory.DEFAULT_COLSPEC,
-						FormFactory.RELATED_GAP_COLSPEC,
-						ColumnSpec.decode("max(61dlu;default):grow"),
-						FormFactory.RELATED_GAP_COLSPEC,
-						FormFactory.DEFAULT_COLSPEC,
 						FormFactory.RELATED_GAP_COLSPEC, }, new RowSpec[] {
 						FormFactory.RELATED_GAP_ROWSPEC,
 						FormFactory.DEFAULT_ROWSPEC,
@@ -86,29 +100,39 @@ public class GUI {
 		this.frmEmissiongenerator.getContentPane().add(lblModel,
 				"2, 2, right, default");
 
-		JComboBox comboModel = new JComboBox();
-		this.frmEmissiongenerator.getContentPane().add(comboModel,
+		this.comboModel = new JComboBox(ModelFactory.MODELLIST);
+		this.frmEmissiongenerator.getContentPane().add(this.comboModel,
 				"4, 2, fill, default");
 
 		JLabel lblConfounder = new JLabel("Confounder:");
 		this.frmEmissiongenerator.getContentPane().add(lblConfounder,
 				"6, 2, right, default");
 
-		JComboBox comboConfounder = new JComboBox();
-		this.frmEmissiongenerator.getContentPane().add(comboConfounder,
-				"8, 2, fill, default");
+		this.comboConfounder = new JComboBox(ConfounderFactory.CONFOUNDERLIST);
+		this.frmEmissiongenerator.getContentPane().add(this.comboConfounder,
+				"8, 2, 3, 1, fill, default");
 
 		JLabel lblSizeOfSequence = new JLabel("size of sequence:");
 		this.frmEmissiongenerator.getContentPane().add(lblSizeOfSequence,
 				"2, 4");
 
-		JSpinner spinnerSize = new JSpinner();
-		this.frmEmissiongenerator.getContentPane().add(spinnerSize, "4, 4");
+		this.spinnerSize = new JSpinner();
+		this.spinnerSize.setModel(new SpinnerNumberModel(new Integer(1),
+				new Integer(1), null, new Integer(1)));
+		this.frmEmissiongenerator.getContentPane()
+				.add(this.spinnerSize, "4, 4");
 
 		JButton btnGenerate = new JButton("Generate!");
+		btnGenerate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				GUI.this.generateSequence();
+			}
+		});
 		this.frmEmissiongenerator.getContentPane().add(btnGenerate, "8, 4");
 
 		JTextPane textReadout = new JTextPane();
+		textReadout.setEditable(false);
 		this.frmEmissiongenerator.getContentPane().add(textReadout,
 				"2, 6, 9, 1, fill, fill");
 
@@ -125,6 +149,19 @@ public class GUI {
 				}
 			}
 		});
+
+		this.modelFactory = new ModelFactory();
+		this.confounderFactory = new ConfounderFactory();
 	}
 
+	private void generateSequence() {
+		int size = Integer.valueOf(this.spinnerSize.getValue().toString())
+				.intValue();
+		this.model = this.modelFactory.createModel(this.comboModel
+				.getSelectedIndex());
+		this.confounder = this.confounderFactory
+				.createConfounder(this.comboConfounder.getSelectedIndex());
+		int i = 6;
+
+	}
 }
