@@ -1,13 +1,19 @@
 package ui;
 
+import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.JTextPane;
+import javax.swing.UIManager;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -26,6 +32,8 @@ public class GUI {
 			@Override
 			public void run() {
 				try {
+					UIManager.setLookAndFeel(UIManager
+							.getSystemLookAndFeelClassName());
 					GUI window = new GUI();
 					window.frmEmissiongenerator.setVisible(true);
 				} catch (Exception e) {
@@ -78,34 +86,45 @@ public class GUI {
 		this.frmEmissiongenerator.getContentPane().add(lblModel,
 				"2, 2, right, default");
 
-		JComboBox comboBox = new JComboBox();
-		this.frmEmissiongenerator.getContentPane().add(comboBox,
+		JComboBox comboModel = new JComboBox();
+		this.frmEmissiongenerator.getContentPane().add(comboModel,
 				"4, 2, fill, default");
 
-		JLabel lblNewLabel = new JLabel("Confounder:");
-		this.frmEmissiongenerator.getContentPane().add(lblNewLabel,
+		JLabel lblConfounder = new JLabel("Confounder:");
+		this.frmEmissiongenerator.getContentPane().add(lblConfounder,
 				"6, 2, right, default");
 
-		JComboBox comboBox_1 = new JComboBox();
-		this.frmEmissiongenerator.getContentPane().add(comboBox_1,
+		JComboBox comboConfounder = new JComboBox();
+		this.frmEmissiongenerator.getContentPane().add(comboConfounder,
 				"8, 2, fill, default");
 
 		JLabel lblSizeOfSequence = new JLabel("size of sequence:");
 		this.frmEmissiongenerator.getContentPane().add(lblSizeOfSequence,
 				"2, 4");
 
-		JSpinner spinner = new JSpinner();
-		this.frmEmissiongenerator.getContentPane().add(spinner, "4, 4");
+		JSpinner spinnerSize = new JSpinner();
+		this.frmEmissiongenerator.getContentPane().add(spinnerSize, "4, 4");
 
 		JButton btnGenerate = new JButton("Generate!");
 		this.frmEmissiongenerator.getContentPane().add(btnGenerate, "8, 4");
 
-		JTextPane textPane = new JTextPane();
-		this.frmEmissiongenerator.getContentPane().add(textPane,
+		JTextPane textReadout = new JTextPane();
+		this.frmEmissiongenerator.getContentPane().add(textReadout,
 				"2, 6, 9, 1, fill, fill");
 
-		JButton btnNewButton = new JButton("save in file...");
-		this.frmEmissiongenerator.getContentPane().add(btnNewButton, "8, 8");
+		JButton btnSave = new JButton("save in file...");
+		this.frmEmissiongenerator.getContentPane().add(btnSave, "8, 8");
+		btnSave.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fc = new JFileChooser();
+
+				if (fc.showSaveDialog((Component) e.getSource()) == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+				}
+			}
+		});
 	}
 
 }
