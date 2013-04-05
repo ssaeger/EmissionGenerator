@@ -16,4 +16,9 @@ public class Movementsequence {
 	public void addMove(Move move) {
 		this.sequence.add(move);
 	}
+
+	public LinkedList<Move> getSequence() {
+		return this.sequence;
+	}
+
 }
