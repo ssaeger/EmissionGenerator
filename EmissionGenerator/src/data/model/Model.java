@@ -7,5 +7,5 @@ public abstract class Model {
 	String name;
 	int id;
 
-	abstract Movementsequence generateMovementsequence();
+	public abstract Movementsequence generateMovementsequence(int size);
 }
