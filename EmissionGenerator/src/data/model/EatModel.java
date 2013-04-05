@@ -1,11 +1,11 @@
 package data.model;
 
 import java.security.GeneralSecurityException;
-import java.util.Random;
 
 import org.uncommons.maths.random.AESCounterRNG;
 import org.uncommons.maths.random.ExponentialGenerator;
 
+import data.Move;
 import data.Movementsequence;
 
 public class EatModel extends Model {
@@ -17,21 +17,30 @@ public class EatModel extends Model {
 
 	@Override
 	public Movementsequence generateMovementsequence(int size) {
-		// TODO Auto-generated method stub
 		ExponentialGenerator expGen;
-		Movementsequence moveSeq;
+		Movementsequence moveSeq = new Movementsequence();
+		AESCounterRNG rnd;
+		Move aktMove;
+
 		try {
-			expGen = new ExponentialGenerator(1, new AESCounterRNG());
-		} catch (GeneralSecurityException e) {
-			expGen = new ExponentialGenerator(1, new Random());
+			rnd = new AESCounterRNG();
+			expGen = new ExponentialGenerator(1, rnd);
+			int steps;
+			for (int i = 0; i < size; i++) {
+				// generate current move
+				aktMove = new Move(rnd.nextDouble(), rnd.nextDouble());
+
+				// add current move
+				moveSeq.addMove(aktMove);
+
+				// // befor generation of a new move slow down the old move
+				// // +0.01 to avoid a move with (0,0)
+				// moveSeq.addMove(aktMove.divideBy(rnd.nextInt(3) + 1));
+				// i++;
+			}
+		} catch (GeneralSecurityException e1) {
+			e1.printStackTrace();
 		}
-
-		int steps = (int) Math.round(expGen.nextValue() * 10);
-
-		// ArrayList<Double> d = new ArrayList<>();
-		// for (int i = 0; i < 11; i++) {
-		// d.add(expGen.nextValue());
-		// }
-		return null;
+		return moveSeq;
 	}
 }
