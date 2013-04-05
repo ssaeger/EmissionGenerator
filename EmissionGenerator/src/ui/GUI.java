@@ -24,6 +24,8 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
 import data.ConfounderFactory;
+import data.Emissionsequence;
+import data.Move;
 import data.Movementsequence;
 import data.model.Model;
 import data.model.ModelFactory;
@@ -38,6 +40,7 @@ public class GUI {
 	private ConfounderFactory confounderFactory;
 	private Model model;
 	private NumberGenerator<?> confounder;
+	private Emissionsequence emisSeq;
 
 	/**
 	 * Launch the application.
@@ -162,8 +165,8 @@ public class GUI {
 				.getSelectedIndex());
 		this.confounder = this.confounderFactory
 				.createConfounder(this.comboConfounder.getSelectedIndex());
-		Movementsequence mov = this.model.generateMovementsequence(size);
-		int i = 6;
-
+		Movementsequence movSeq = this.model.generateMovementsequence(size);
+		this.emisSeq = new Emissionsequence(movSeq);
+		this.emisSeq.getEmissionId(new Move(2, 2), new Move(4, 4));
 	}
 }
