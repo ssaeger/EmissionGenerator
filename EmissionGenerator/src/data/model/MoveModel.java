@@ -38,7 +38,7 @@ public class MoveModel extends Model {
 					moveSeq.addMove(aktMove);
 					i++;
 				}
-				// bevor generation of a new move slow down the old move
+				// before generation of a new move slow down the old move
 				// +0.01 to avoid a move with (0,0)
 				moveSeq.addMove(aktMove.divideBy(rnd.nextInt(3) + 1));
 				i++;
