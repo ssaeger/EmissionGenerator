@@ -10,6 +10,18 @@ public class ConfounderFactory {
 			"Normal distribution, \u03C3 = 1",
 			"Normal distribution, \u03C3 = 2" };
 
+	private static ConfounderFactory instance;
+
+	private ConfounderFactory() {
+	}
+
+	public static ConfounderFactory getInstance() {
+		if (instance == null) {
+			instance = new ConfounderFactory();
+		}
+		return instance;
+	}
+
 	public NumberGenerator<?> createConfounder(int id) {
 		switch (id) {
 		case 0:
@@ -22,5 +34,3 @@ public class ConfounderFactory {
 	}
 
 }
-
-// Singleton?
