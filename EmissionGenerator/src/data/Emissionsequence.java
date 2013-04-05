@@ -117,4 +117,31 @@ public class Emissionsequence {
 			}
 		}
 	}
+
+	public double[] getEmissionsAsArray() {
+		double[] emissionArray = new double[this.sequence.size()];
+		int i = 0;
+		for (Integer emission : this.sequence) {
+			emissionArray[i++] = emission;
+		}
+		return emissionArray;
+	}
+
+	public LinkedList<Integer> getSequence() {
+		return this.sequence;
+	}
+
+	@Override
+	public String toString() {
+		String s = "";
+		Iterator<Integer> iterator = this.sequence.iterator();
+
+		s += iterator.next();
+
+		while (iterator.hasNext()) {
+			s += ", " + String.valueOf(iterator.next());
+		}
+		return s + "\n";
+	}
+
 }
