@@ -195,6 +195,15 @@ public class GUI {
 		this.frmEmissiongenerator.getContentPane().add(btnInterfere, "4, 10");
 		this.frmEmissiongenerator.getContentPane().add(btnHistogram, "6, 10");
 
+		JButton btnMatrix = new JButton("Stochastic Matrix");
+		btnMatrix.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new Matrix(GUI.this.emisSeq);
+			}
+		});
+		this.frmEmissiongenerator.getContentPane().add(btnMatrix, "8, 10");
+
 		JButton btnSave = new JButton("save to file...");
 		this.frmEmissiongenerator.getContentPane().add(btnSave, "10, 10");
 		btnSave.addActionListener(new ActionListener() {

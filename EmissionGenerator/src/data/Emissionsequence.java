@@ -3,12 +3,11 @@ package data;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import javax.swing.table.DefaultTableModel;
+
 import org.uncommons.maths.number.NumberGenerator;
 
 public class Emissionsequence {
-
-	LinkedList<Integer> sequence;
-	// int[] emisCounter;
 
 	// A="accelerate", C="constant", B="brake"
 	// 30="<30°", 45="<45°", 90="<90°", 135="<135°", 150="<150°",180="<=180°"
@@ -36,37 +35,44 @@ public class Emissionsequence {
 
 	public static final int EMISSIONCOUNT = 21;
 
+	LinkedList<Integer> sequence;
+
+	int[][] absMarkovChain;
+	double[][] relMarkovChain;
+
 	public Emissionsequence() {
 		this.sequence = new LinkedList<>();
-		// this.emisCounter = new int[21];
+		this.createNewMarkovChains();
 	}
 
 	public Emissionsequence(LinkedList<Integer> sequence) {
 		this.sequence = sequence;
-		// this.emisCounter = new int[21];
+		this.createNewMarkovChains();
 	}
 
 	public Emissionsequence(Movementsequence movSeq) {
 		this.sequence = new LinkedList<>();
-		// this.emisCounter = new int[21];
+		this.createNewMarkovChains();
 
 		Iterator<?> iterator = movSeq.getSequence().iterator();
 		Move m1 = (Move) iterator.next();
 		Move m2;
-		int tmpEmisId;
-		// while (iterator.hasNext()) {
-		// m2 = (Move) iterator.next();
-		// tmpEmisId = this.getEmissionId(m1, m2);
-		// this.sequence.add(tmpEmisId);
-		// this.emisCounter[tmpEmisId]++;
-		// m1 = m2;
-		// }
 		while (iterator.hasNext()) {
 			m2 = (Move) iterator.next();
 			this.sequence.add(this.getEmissionId(m1, m2));
 			m1 = m2;
 		}
 
+	}
+
+	private void createNewMarkovChains() {
+		this.absMarkovChain = new int[EMISSIONCOUNT][EMISSIONCOUNT];
+		this.relMarkovChain = new double[EMISSIONCOUNT][EMISSIONCOUNT];
+		for (int i = 0; i < this.absMarkovChain.length; i++) {
+			for (int j = 0; j < this.absMarkovChain.length; j++) {
+				this.absMarkovChain[i][j] = 0;
+			}
+		}
 	}
 
 	public int getEmissionId(Move m1, Move m2) {
@@ -156,6 +162,85 @@ public class Emissionsequence {
 			interferedSequence.add(tmpEmission);
 		}
 		return new Emissionsequence(interferedSequence);
+	}
+
+	private void generateMarkovChains() {
+
+		Iterator<Integer> iterator = this.sequence.iterator();
+
+		int e1 = iterator.next();
+		int e2;
+		while (iterator.hasNext()) {
+			e2 = iterator.next();
+			this.absMarkovChain[e1][e2] += 1;
+			e1 = e2;
+		}
+		this.generateRelMarkovChain();
+	}
+
+	private void generateRelMarkovChain() {
+		for (int i = 0; i < this.absMarkovChain.length; i++) { // rows
+			int sum = 0;
+			for (int j = 0; j < this.absMarkovChain.length; j++) { // columns
+				// sum all values of a row
+				sum += this.absMarkovChain[i][j];
+			}
+			for (int j = 0; j < this.absMarkovChain.length; j++) {
+				// divide all values of a row by the previous calculated sum
+				if (this.absMarkovChain[i][j] != 0) {
+
+					this.relMarkovChain[i][j] = Math
+							.rint((this.absMarkovChain[i][j] / (double) sum) * 100) / 100;
+				}
+			}
+		}
+	}
+
+	public DefaultTableModel createMatrix() {
+		// +1 because the first column contains the caption
+		DefaultTableModel tableModel = new DefaultTableModel(EMISSIONCOUNT,
+				EMISSIONCOUNT + 1);
+
+		this.generateMarkovChains();
+
+		for (int i = 0; i < this.absMarkovChain.length; i++) { // rows
+			tableModel.setValueAt(i, i, 0);
+			for (int j = 0; j < this.absMarkovChain.length; j++) { // columns
+				tableModel.setValueAt(this.absMarkovChain[i][j], i, j + 1);
+			}
+		}
+
+		return tableModel;
+	}
+
+	public DefaultTableModel getAbsMatrix() {
+		// +1 because the first column contains the caption
+		DefaultTableModel tableModel = new DefaultTableModel(EMISSIONCOUNT,
+				EMISSIONCOUNT + 1);
+
+		for (int i = 0; i < this.absMarkovChain.length; i++) { // rows
+			tableModel.setValueAt(i, i, 0);
+			for (int j = 0; j < this.absMarkovChain.length; j++) { // columns
+				tableModel.setValueAt(this.absMarkovChain[i][j], i, j + 1);
+			}
+		}
+
+		return tableModel;
+	}
+
+	public DefaultTableModel getRelMatrix() {
+		// +1 because the first column contains the caption
+		DefaultTableModel tableModel = new DefaultTableModel(EMISSIONCOUNT,
+				EMISSIONCOUNT + 1);
+
+		for (int i = 0; i < this.relMarkovChain.length; i++) { // rows
+			tableModel.setValueAt(i, i, 0);
+			for (int j = 0; j < this.relMarkovChain.length; j++) { // columns
+				tableModel.setValueAt(this.relMarkovChain[i][j], i, j + 1);
+			}
+		}
+
+		return tableModel;
 	}
 
 	public LinkedList<Integer> getSequence() {
