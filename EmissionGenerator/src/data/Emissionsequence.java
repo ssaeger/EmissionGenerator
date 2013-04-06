@@ -74,9 +74,10 @@ public class Emissionsequence {
 	}
 
 	private void createEmissionList() {
-		this.emissionList = new String[EMISSIONCOUNT];
+		this.emissionList = new String[EMISSIONCOUNT + 1];
+		this.emissionList[0] = "";
 		for (int i = 0; i < EMISSIONCOUNT; i++) {
-			this.emissionList[i] = String.valueOf(i);
+			this.emissionList[i + 1] = String.valueOf(i);
 		}
 	}
 
