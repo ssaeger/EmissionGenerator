@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -45,6 +46,7 @@ public class GUI {
 	private JComboBox comboModel;
 	private JComboBox comboConfounder;
 	private JTextArea textReadout;
+	private JCheckBox chckbxShow;
 	private ModelFactory modelFactory;
 	private ConfounderFactory confounderFactory;
 	private Model model;
@@ -152,6 +154,13 @@ public class GUI {
 		this.frmEmissiongenerator.getContentPane().add(lblEmissionsequence,
 				"2, 6");
 
+		this.chckbxShow = new JCheckBox(
+				"Show Emissionsequence in following box");
+		this.chckbxShow
+				.setToolTipText("For better performance the emissionsequence will not shown automatically");
+		this.frmEmissiongenerator.getContentPane().add(this.chckbxShow,
+				"8, 6, 5, 1");
+
 		JScrollPane scrollPane = new JScrollPane();
 		this.frmEmissiongenerator.getContentPane().add(scrollPane,
 				"2, 8, 11, 1, fill, fill");
@@ -187,7 +196,7 @@ public class GUI {
 								.getSelectedIndex());
 				GUI.this.emisSeq = GUI.this.emisSeq
 						.interfereWith(GUI.this.confounder);
-				GUI.this.updateReadout(GUI.this.emisSeq.toString());
+				GUI.this.updateReadout("Emissionsequence interfered!");
 			}
 		});
 		btnInterfere
@@ -238,10 +247,14 @@ public class GUI {
 				.getSelectedIndex());
 		Movementsequence movSeq = this.model.generateMovementsequence(size);
 		this.emisSeq = new Emissionsequence(movSeq);
-		this.updateReadout(this.emisSeq.toString());
+		this.updateReadout("Emissionsequence was generated successfully!");
 	}
 
 	private void updateReadout(String s) {
-		this.textReadout.setText(s);
+		if (this.chckbxShow.isSelected()) {
+			this.textReadout.setText(this.emisSeq.toString());
+		} else {
+			this.textReadout.setText(s);
+		}
 	}
 }
