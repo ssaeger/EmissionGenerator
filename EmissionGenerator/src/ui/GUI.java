@@ -95,9 +95,9 @@ public class GUI {
 						FormFactory.RELATED_GAP_COLSPEC,
 						ColumnSpec.decode("max(40dlu;default)"),
 						FormFactory.RELATED_GAP_COLSPEC,
-						ColumnSpec.decode("max(61dlu;default)"),
+						ColumnSpec.decode("max(65dlu;default)"),
 						FormFactory.RELATED_GAP_COLSPEC,
-						ColumnSpec.decode("max(71dlu;default)"),
+						ColumnSpec.decode("max(49dlu;default)"),
 						FormFactory.RELATED_GAP_COLSPEC,
 						ColumnSpec.decode("default:grow"),
 						FormFactory.RELATED_GAP_COLSPEC, }, new RowSpec[] {
@@ -134,7 +134,7 @@ public class GUI {
 				"2, 4");
 
 		this.spinnerSize = new JSpinner();
-		this.spinnerSize.setModel(new SpinnerNumberModel(new Integer(1),
+		this.spinnerSize.setModel(new SpinnerNumberModel(new Integer(10),
 				new Integer(1), null, new Integer(1)));
 		this.frmEmissiongenerator.getContentPane()
 				.add(this.spinnerSize, "4, 4");

@@ -35,25 +35,34 @@ public class Emissionsequence {
 
 	public static final int EMISSIONCOUNT = 21;
 
-	LinkedList<Integer> sequence;
+	private String[] emissionList;
 
-	int[][] absMarkovChain;
-	double[][] relMarkovChain;
+	private final LinkedList<Integer> sequence;
+
+	private int[][] absMarkovChain;
+	private double[][] relMarkovChain;
 
 	public Emissionsequence() {
 		this.sequence = new LinkedList<>();
 		this.createNewMarkovChains();
+		this.createEmissionList();
 	}
 
 	public Emissionsequence(LinkedList<Integer> sequence) {
 		this.sequence = sequence;
 		this.createNewMarkovChains();
+		this.createEmissionList();
 	}
 
 	public Emissionsequence(Movementsequence movSeq) {
 		this.sequence = new LinkedList<>();
 		this.createNewMarkovChains();
+		this.createEmissionList();
+		this.createEmissionsequenceFrom(movSeq);
 
+	}
+
+	private void createEmissionsequenceFrom(Movementsequence movSeq) {
 		Iterator<?> iterator = movSeq.getSequence().iterator();
 		Move m1 = (Move) iterator.next();
 		Move m2;
@@ -62,7 +71,13 @@ public class Emissionsequence {
 			this.sequence.add(this.getEmissionId(m1, m2));
 			m1 = m2;
 		}
+	}
 
+	private void createEmissionList() {
+		this.emissionList = new String[EMISSIONCOUNT];
+		for (int i = 0; i < EMISSIONCOUNT; i++) {
+			this.emissionList[i] = String.valueOf(i);
+		}
 	}
 
 	private void createNewMarkovChains() {
@@ -210,6 +225,8 @@ public class Emissionsequence {
 			}
 		}
 
+		tableModel.setColumnIdentifiers(this.emissionList);
+
 		return tableModel;
 	}
 
@@ -225,6 +242,8 @@ public class Emissionsequence {
 			}
 		}
 
+		tableModel.setColumnIdentifiers(this.emissionList);
+
 		return tableModel;
 	}
 
@@ -239,6 +258,8 @@ public class Emissionsequence {
 				tableModel.setValueAt(this.relMarkovChain[i][j], i, j + 1);
 			}
 		}
+
+		tableModel.setColumnIdentifiers(this.emissionList);
 
 		return tableModel;
 	}
