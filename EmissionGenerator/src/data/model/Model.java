@@ -8,4 +8,6 @@ public abstract class Model {
 	int id;
 
 	public abstract Movementsequence generateMovementsequence(int size);
+
+	public abstract String getName();
 }

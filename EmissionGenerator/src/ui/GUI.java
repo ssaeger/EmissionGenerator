@@ -142,6 +142,8 @@ public class GUI {
 				.add(this.spinnerSize, "4, 4");
 
 		JButton btnGenerate = new JButton("Generate!");
+		btnGenerate
+				.setToolTipText("Generate a emissionsequence without interferences");
 		btnGenerate.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -172,6 +174,8 @@ public class GUI {
 		this.textReadout.setWrapStyleWord(true);
 
 		JButton btnHistogram = new JButton("Histogram");
+		btnHistogram
+				.setToolTipText("Shows a histogram of the generated emissionsequence");
 		btnHistogram.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -180,9 +184,9 @@ public class GUI {
 				double[] values = GUI.this.emisSeq.getEmissionsAsArray();
 				histData.addSeries("H1", values, Emissionsequence.EMISSIONCOUNT);
 
-				JFreeChart chart = ChartFactory.createHistogram("Histogramm",
-						"EmissionID", "Frequency", histData,
-						PlotOrientation.VERTICAL, false, false, false);
+				JFreeChart chart = ChartFactory.createHistogram(
+						GUI.this.model.getName(), "EmissionID", "Frequency",
+						histData, PlotOrientation.VERTICAL, false, false, false);
 				new Histogram(new ChartPanel(chart));
 			}
 		});
@@ -200,7 +204,7 @@ public class GUI {
 			}
 		});
 		btnInterfere
-				.setToolTipText("Interfere the Emissionsequence with the selected confounder");
+				.setToolTipText("Interfere the emissionsequence with the selected confounder");
 		this.frmEmissiongenerator.getContentPane().add(btnInterfere, "4, 10");
 		this.frmEmissiongenerator.getContentPane().add(btnHistogram, "6, 10");
 
@@ -214,6 +218,7 @@ public class GUI {
 		this.frmEmissiongenerator.getContentPane().add(btnMatrix, "8, 10");
 
 		JButton btnSave = new JButton("save to file...");
+		btnSave.setToolTipText("Save the emissionsequence to a file");
 		this.frmEmissiongenerator.getContentPane().add(btnSave, "10, 10");
 		btnSave.addActionListener(new ActionListener() {
 

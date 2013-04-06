@@ -273,10 +273,10 @@ public class Emissionsequence {
 		String s = "";
 		Iterator<Integer> iterator = this.sequence.iterator();
 
-		s += iterator.next();
+		s += "\"" + iterator.next() + "\"";
 
 		while (iterator.hasNext()) {
-			s += ", " + String.valueOf(iterator.next());
+			s += ",\"" + String.valueOf(iterator.next()) + "\"";
 		}
 		return s + "\n";
 	}

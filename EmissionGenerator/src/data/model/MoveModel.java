@@ -48,4 +48,9 @@ public class MoveModel extends Model {
 		}
 		return moveSeq;
 	}
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
 }
