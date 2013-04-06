@@ -3,10 +3,13 @@ package data;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.uncommons.maths.number.NumberGenerator;
+
 public class Emissionsequence {
 
 	LinkedList<Integer> sequence;
-	int[] emisCounter;
+	// int[] emisCounter;
+
 	// A="accelerate", C="constant", B="brake"
 	// 30="<30°", 45="<45°", 90="<90°", 135="<135°", 150="<150°",180="<=180°"
 	public static final int A30 = 0;
@@ -31,24 +34,36 @@ public class Emissionsequence {
 	public static final int C0 = 19;
 	public static final int B0 = 20;
 
+	public static final int EMISSIONCOUNT = 21;
+
 	public Emissionsequence() {
 		this.sequence = new LinkedList<>();
-		this.emisCounter = new int[21];
+		// this.emisCounter = new int[21];
+	}
+
+	public Emissionsequence(LinkedList<Integer> sequence) {
+		this.sequence = sequence;
+		// this.emisCounter = new int[21];
 	}
 
 	public Emissionsequence(Movementsequence movSeq) {
 		this.sequence = new LinkedList<>();
-		this.emisCounter = new int[21];
+		// this.emisCounter = new int[21];
 
 		Iterator<?> iterator = movSeq.getSequence().iterator();
 		Move m1 = (Move) iterator.next();
 		Move m2;
 		int tmpEmisId;
+		// while (iterator.hasNext()) {
+		// m2 = (Move) iterator.next();
+		// tmpEmisId = this.getEmissionId(m1, m2);
+		// this.sequence.add(tmpEmisId);
+		// this.emisCounter[tmpEmisId]++;
+		// m1 = m2;
+		// }
 		while (iterator.hasNext()) {
 			m2 = (Move) iterator.next();
-			tmpEmisId = this.getEmissionId(m1, m2);
-			this.sequence.add(tmpEmisId);
-			this.emisCounter[tmpEmisId]++;
+			this.sequence.add(this.getEmissionId(m1, m2));
 			m1 = m2;
 		}
 
@@ -125,6 +140,22 @@ public class Emissionsequence {
 			emissionArray[i++] = emission;
 		}
 		return emissionArray;
+	}
+
+	public Emissionsequence interfereWith(NumberGenerator<?> confounder) {
+		LinkedList<Integer> interferedSequence = new LinkedList<>();
+		int tmpEmission;
+		for (Integer i : this.sequence) {
+			tmpEmission = i + confounder.nextValue().intValue();
+			if (tmpEmission >= EMISSIONCOUNT) {
+				// -1 because 21 emissions, but highest id is 20
+				tmpEmission = EMISSIONCOUNT - 1;
+			} else if (tmpEmission < 0) {
+				tmpEmission = 0;
+			}
+			interferedSequence.add(tmpEmission);
+		}
+		return new Emissionsequence(interferedSequence);
 	}
 
 	public LinkedList<Integer> getSequence() {

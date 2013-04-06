@@ -97,8 +97,12 @@ public class GUI {
 						FormFactory.RELATED_GAP_COLSPEC,
 						ColumnSpec.decode("max(61dlu;default)"),
 						FormFactory.RELATED_GAP_COLSPEC,
+						ColumnSpec.decode("max(71dlu;default)"),
+						FormFactory.RELATED_GAP_COLSPEC,
 						ColumnSpec.decode("default:grow"),
 						FormFactory.RELATED_GAP_COLSPEC, }, new RowSpec[] {
+						FormFactory.RELATED_GAP_ROWSPEC,
+						FormFactory.DEFAULT_ROWSPEC,
 						FormFactory.RELATED_GAP_ROWSPEC,
 						FormFactory.DEFAULT_ROWSPEC,
 						FormFactory.RELATED_GAP_ROWSPEC,
@@ -123,7 +127,7 @@ public class GUI {
 
 		this.comboConfounder = new JComboBox(ConfounderFactory.CONFOUNDERLIST);
 		this.frmEmissiongenerator.getContentPane().add(this.comboConfounder,
-				"8, 2, 3, 1, fill, default");
+				"8, 2, 5, 1, fill, default");
 
 		JLabel lblSizeOfSequence = new JLabel("size of sequence:");
 		this.frmEmissiongenerator.getContentPane().add(lblSizeOfSequence,
@@ -144,9 +148,13 @@ public class GUI {
 		});
 		this.frmEmissiongenerator.getContentPane().add(btnGenerate, "8, 4");
 
+		JLabel lblEmissionsequence = new JLabel("Emissionsequence:");
+		this.frmEmissiongenerator.getContentPane().add(lblEmissionsequence,
+				"2, 6");
+
 		JScrollPane scrollPane = new JScrollPane();
 		this.frmEmissiongenerator.getContentPane().add(scrollPane,
-				"2, 6, 9, 1, fill, fill");
+				"2, 8, 11, 1, fill, fill");
 
 		this.textReadout = new JTextArea();
 		scrollPane.setViewportView(this.textReadout);
@@ -161,7 +169,7 @@ public class GUI {
 				HistogramDataset histData = new HistogramDataset();
 				histData.setType(HistogramType.FREQUENCY);
 				double[] values = GUI.this.emisSeq.getEmissionsAsArray();
-				histData.addSeries("H1", values, values.length);
+				histData.addSeries("H1", values, Emissionsequence.EMISSIONCOUNT);
 
 				JFreeChart chart = ChartFactory.createHistogram("Histogramm",
 						"EmissionID", "Frequency", histData,
@@ -169,10 +177,26 @@ public class GUI {
 				new Histogram(new ChartPanel(chart));
 			}
 		});
-		this.frmEmissiongenerator.getContentPane().add(btnHistogram, "4, 8");
 
-		JButton btnSave = new JButton("save in file...");
-		this.frmEmissiongenerator.getContentPane().add(btnSave, "8, 8");
+		JButton btnInterfere = new JButton("Interfere");
+		btnInterfere.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				GUI.this.confounder = GUI.this.confounderFactory
+						.createConfounder(GUI.this.comboConfounder
+								.getSelectedIndex());
+				GUI.this.emisSeq = GUI.this.emisSeq
+						.interfereWith(GUI.this.confounder);
+				GUI.this.updateReadout(GUI.this.emisSeq.toString());
+			}
+		});
+		btnInterfere
+				.setToolTipText("Interfere the Emissionsequence with the selected confounder");
+		this.frmEmissiongenerator.getContentPane().add(btnInterfere, "4, 10");
+		this.frmEmissiongenerator.getContentPane().add(btnHistogram, "6, 10");
+
+		JButton btnSave = new JButton("save to file...");
+		this.frmEmissiongenerator.getContentPane().add(btnSave, "10, 10");
 		btnSave.addActionListener(new ActionListener() {
 
 			@Override
@@ -203,10 +227,12 @@ public class GUI {
 				.intValue();
 		this.model = this.modelFactory.createModel(this.comboModel
 				.getSelectedIndex());
-		this.confounder = this.confounderFactory
-				.createConfounder(this.comboConfounder.getSelectedIndex());
 		Movementsequence movSeq = this.model.generateMovementsequence(size);
 		this.emisSeq = new Emissionsequence(movSeq);
-		this.textReadout.setText(this.emisSeq.toString());
+		this.updateReadout(this.emisSeq.toString());
+	}
+
+	private void updateReadout(String s) {
+		this.textReadout.setText(s);
 	}
 }
