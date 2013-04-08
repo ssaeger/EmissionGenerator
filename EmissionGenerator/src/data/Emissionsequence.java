@@ -9,8 +9,12 @@ import org.uncommons.maths.number.NumberGenerator;
 
 public class Emissionsequence {
 
+	// The IDs of the emissions are encoded as following:
+	// First a character for the velocity:
 	// A="accelerate", C="constant", B="brake"
-	// 30="<30°", 45="<45°", 90="<90°", 135="<135°", 150="<150°",180="<=180°"
+	// Next one of the following numbers for the related angle:
+	// 0="0°", 30="<30°", 45="<45°", 90="<90°", 135="<135°",
+	// 150="<150°", 180="<=180°"
 	public static final int A30 = 0;
 	public static final int A45 = 1;
 	public static final int A90 = 2;
@@ -33,35 +37,63 @@ public class Emissionsequence {
 	public static final int C0 = 19;
 	public static final int B0 = 20;
 
+	/**
+	 * Number of different emissions.
+	 */
 	public static final int EMISSIONCOUNT = 21;
 
+	/**
+	 * Array with all different emissions as Strings for the table header
+	 */
 	private String[] emissionList;
 
+	/**
+	 * The sequence of emissions
+	 */
 	private final LinkedList<Integer> sequence;
 
+	/**
+	 * Markovchain with absolute frequencies.
+	 */
 	private int[][] absMarkovChain;
+
+	/**
+	 * Markovchain with relative frequencies.
+	 */
 	private double[][] relMarkovChain;
 
+	/**
+	 * Creates a new emissionsequence
+	 */
 	public Emissionsequence() {
 		this.sequence = new LinkedList<>();
-		this.createNewMarkovChains();
+		this.initializeNewMarkovChains();
 		this.createEmissionList();
 	}
 
+	/**
+	 * Creates a new emissionsequence object from a list of emissions.
+	 */
 	public Emissionsequence(LinkedList<Integer> sequence) {
 		this.sequence = sequence;
-		this.createNewMarkovChains();
+		this.initializeNewMarkovChains();
 		this.createEmissionList();
 	}
 
+	/**
+	 * Creates a new emissionsequence object from a movementsequence.
+	 */
 	public Emissionsequence(Movementsequence movSeq) {
 		this.sequence = new LinkedList<>();
-		this.createNewMarkovChains();
+		this.initializeNewMarkovChains();
 		this.createEmissionList();
 		this.createEmissionsequenceFrom(movSeq);
 
 	}
 
+	/**
+	 * Creates the sequence of emissions from a movementsequence.
+	 */
 	private void createEmissionsequenceFrom(Movementsequence movSeq) {
 		Iterator<?> iterator = movSeq.getSequence().iterator();
 		Move m1 = (Move) iterator.next();
@@ -73,6 +105,9 @@ public class Emissionsequence {
 		}
 	}
 
+	/**
+	 * Creates the list of Strings of the emissions
+	 */
 	private void createEmissionList() {
 		this.emissionList = new String[EMISSIONCOUNT + 1];
 		this.emissionList[0] = "";
@@ -81,7 +116,10 @@ public class Emissionsequence {
 		}
 	}
 
-	private void createNewMarkovChains() {
+	/**
+	 * Initializes the markovchains
+	 */
+	private void initializeNewMarkovChains() {
 		this.absMarkovChain = new int[EMISSIONCOUNT][EMISSIONCOUNT];
 		this.relMarkovChain = new double[EMISSIONCOUNT][EMISSIONCOUNT];
 		for (int i = 0; i < this.absMarkovChain.length; i++) {
@@ -91,6 +129,15 @@ public class Emissionsequence {
 		}
 	}
 
+	/**
+	 * Determines a emission from two given moves
+	 * 
+	 * @param m1
+	 *            the first move
+	 * @param m2
+	 *            the following move
+	 * @return the emissionid of the determined emission
+	 */
 	public int getEmissionId(Move m1, Move m2) {
 		// compute the difference between the lengths of the movementvectors
 		double diff = m1.lengthDifference(m2);
@@ -155,6 +202,11 @@ public class Emissionsequence {
 		}
 	}
 
+	/**
+	 * Converts the sequence of emissions from a list into an array of doubles
+	 * 
+	 * @return array with the emissions as doubles
+	 */
 	public double[] getEmissionsAsArray() {
 		double[] emissionArray = new double[this.sequence.size()];
 		int i = 0;
@@ -164,6 +216,13 @@ public class Emissionsequence {
 		return emissionArray;
 	}
 
+	/**
+	 * Interferes the emissionsequence with a given confounder
+	 * 
+	 * @param confounder
+	 *            the confounder which should be used for the interference
+	 * @return the interfered emissionsequence
+	 */
 	public Emissionsequence interfereWith(NumberGenerator<?> confounder) {
 		LinkedList<Integer> interferedSequence = new LinkedList<>();
 		int tmpEmission;
@@ -180,6 +239,11 @@ public class Emissionsequence {
 		return new Emissionsequence(interferedSequence);
 	}
 
+	/**
+	 * Generates the markovchains for this emissionsequence. It generates the
+	 * markovchain with the absolute frequencies first and then call the
+	 * function for the relative frequencies.
+	 */
 	private void generateMarkovChains() {
 
 		Iterator<Integer> iterator = this.sequence.iterator();
@@ -194,6 +258,9 @@ public class Emissionsequence {
 		this.generateRelMarkovChain();
 	}
 
+	/**
+	 * Compute the relative frequencies for the markovchain.
+	 */
 	private void generateRelMarkovChain() {
 		for (int i = 0; i < this.absMarkovChain.length; i++) { // rows
 			int sum = 0;
@@ -212,6 +279,13 @@ public class Emissionsequence {
 		}
 	}
 
+	/**
+	 * Creates a DefaultTableModel from the absolute markovchain. This function
+	 * is only called when the GUI creates a new matrix and it's needed that the
+	 * markovchains are generated for the first time.
+	 * 
+	 * @return the DefaulttableModel with the absolute frequencies
+	 */
 	public DefaultTableModel createMatrix() {
 		// +1 because the first column contains the caption
 		DefaultTableModel tableModel = new DefaultTableModel(EMISSIONCOUNT,
@@ -231,6 +305,11 @@ public class Emissionsequence {
 		return tableModel;
 	}
 
+	/**
+	 * Creates a DefaultTableModel from the absolute markovchain.
+	 * 
+	 * @return the DefaulttableModel with the absolute frequencies
+	 */
 	public DefaultTableModel getAbsMatrix() {
 		// +1 because the first column contains the caption
 		DefaultTableModel tableModel = new DefaultTableModel(EMISSIONCOUNT,
@@ -248,6 +327,11 @@ public class Emissionsequence {
 		return tableModel;
 	}
 
+	/**
+	 * Creates a DefaultTableModel from the relative markovchain.
+	 * 
+	 * @return the DefaulttableModel with the relative frequencies
+	 */
 	public DefaultTableModel getRelMatrix() {
 		// +1 because the first column contains the caption
 		DefaultTableModel tableModel = new DefaultTableModel(EMISSIONCOUNT,

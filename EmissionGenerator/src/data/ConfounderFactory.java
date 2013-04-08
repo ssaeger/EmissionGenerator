@@ -5,6 +5,13 @@ import java.util.Random;
 import org.uncommons.maths.number.NumberGenerator;
 import org.uncommons.maths.random.GaussianGenerator;
 
+/**
+ * This class is a factory which creates the selected confounder. It's
+ * implemented as a sigleton.
+ * 
+ * @author Sebastian
+ * 
+ */
 public class ConfounderFactory {
 	public static final String[] CONFOUNDERLIST = {
 			"Normal distribution, \u03C3 = 1",
@@ -22,6 +29,13 @@ public class ConfounderFactory {
 		return instance;
 	}
 
+	/**
+	 * Creates the selected confounder.
+	 * 
+	 * @param id
+	 *            id of the selected confounder
+	 * @return the created confounder
+	 */
 	public NumberGenerator<?> createConfounder(int id) {
 		switch (id) {
 		case 0:
