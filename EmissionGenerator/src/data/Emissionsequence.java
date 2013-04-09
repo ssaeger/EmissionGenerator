@@ -95,7 +95,16 @@ public class Emissionsequence {
 		this.initializeNewMarkovChains();
 		this.createEmissionList();
 		this.createEmissionsequenceFrom(movSeq);
+	}
 
+	/**
+	 * Creates a new emissionsequence object from a String of emissions. Can be
+	 * used when a an emissionsequence is loaded from a file.
+	 */
+	public Emissionsequence(String emisString) {
+		this.sequence = this.fromString(emisString);
+		this.initializeNewMarkovChains();
+		this.createEmissionList();
 	}
 
 	/**
@@ -358,6 +367,26 @@ public class Emissionsequence {
 
 	public LinkedList<Integer> getSequence() {
 		return this.sequence;
+	}
+
+	/**
+	 * Convertes a string with emissions to an list of emissions.
+	 * 
+	 * @param emisString
+	 *            the string with emissions
+	 * @return list of emissions
+	 */
+	private LinkedList<Integer> fromString(String emisString) {
+		LinkedList<Integer> sequenceFromString = new LinkedList();
+
+		// remove \n at the last position of the string
+		emisString = emisString.substring(0, emisString.length() - 1);
+		String[] emissionArray = emisString.split(",");
+		for (int i = 0; i < emissionArray.length; i++) {
+			sequenceFromString.add(Integer.parseInt(emissionArray[i].substring(
+					1, emissionArray[i].length() - 1)));
+		}
+		return sequenceFromString;
 	}
 
 	@Override

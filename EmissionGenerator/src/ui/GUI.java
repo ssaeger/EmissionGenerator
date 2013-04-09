@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -52,6 +53,7 @@ public class GUI {
 	private Model model;
 	private NumberGenerator<?> confounder;
 	private Emissionsequence emisSeq;
+	private Movementsequence movSeq;
 
 	/**
 	 * Launch the application.
@@ -85,7 +87,7 @@ public class GUI {
 	private void initialize() {
 		this.frmEmissiongenerator = new JFrame();
 		this.frmEmissiongenerator.setTitle("EmissionGenerator");
-		this.frmEmissiongenerator.setBounds(100, 100, 600, 300);
+		this.frmEmissiongenerator.setBounds(100, 100, 600, 310);
 		this.frmEmissiongenerator
 				.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frmEmissiongenerator.getContentPane().setLayout(
@@ -111,6 +113,8 @@ public class GUI {
 						FormFactory.DEFAULT_ROWSPEC,
 						FormFactory.RELATED_GAP_ROWSPEC,
 						RowSpec.decode("default:grow"),
+						FormFactory.RELATED_GAP_ROWSPEC,
+						FormFactory.DEFAULT_ROWSPEC,
 						FormFactory.RELATED_GAP_ROWSPEC,
 						FormFactory.DEFAULT_ROWSPEC,
 						FormFactory.RELATED_GAP_ROWSPEC, }));
@@ -184,10 +188,26 @@ public class GUI {
 				double[] values = GUI.this.emisSeq.getEmissionsAsArray();
 				histData.addSeries("H1", values, Emissionsequence.EMISSIONCOUNT);
 
-				JFreeChart chart = ChartFactory.createHistogram(
-						GUI.this.model.getName(), "EmissionID", "Frequency",
-						histData, PlotOrientation.VERTICAL, false, false, false);
+				JFreeChart chart;
+				if (GUI.this.model != null) {
+					chart = ChartFactory.createHistogram(
+							GUI.this.model.getName(), "EmissionID",
+							"Frequency", histData, PlotOrientation.VERTICAL,
+							false, false, false);
+				} else {
+					chart = ChartFactory.createHistogram("unknown Model",
+							"EmissionID", "Frequency", histData,
+							PlotOrientation.VERTICAL, false, false, false);
+				}
 				new Histogram(new ChartPanel(chart));
+			}
+		});
+
+		JButton btnMatrix = new JButton("Stochastic Matrix");
+		btnMatrix.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new Matrix(GUI.this.emisSeq);
 			}
 		});
 
@@ -200,27 +220,79 @@ public class GUI {
 								.getSelectedIndex());
 				GUI.this.emisSeq = GUI.this.emisSeq
 						.interfereWith(GUI.this.confounder);
-				GUI.this.updateReadout("Emissionsequence interfered!");
+				GUI.this.displayEmissionsequence("Emissionsequence interfered!");
 			}
 		});
 		btnInterfere
 				.setToolTipText("Interfere the emissionsequence with the selected confounder");
-		this.frmEmissiongenerator.getContentPane().add(btnInterfere, "4, 10");
-		this.frmEmissiongenerator.getContentPane().add(btnHistogram, "6, 10");
+		this.frmEmissiongenerator.getContentPane().add(btnInterfere, "6, 10");
+		this.frmEmissiongenerator.getContentPane().add(btnMatrix, "8, 10");
+		this.frmEmissiongenerator.getContentPane().add(btnHistogram, "10, 10");
 
-		JButton btnMatrix = new JButton("Stochastic Matrix");
-		btnMatrix.addActionListener(new ActionListener() {
+		JLabel lblMovementsequence = new JLabel("Movementsequence:");
+		this.frmEmissiongenerator.getContentPane().add(lblMovementsequence,
+				"2, 12");
+
+		JButton btnLoadMoveSeq = new JButton("load...");
+		btnLoadMoveSeq.setToolTipText("load a movementsequence from a file");
+		this.frmEmissiongenerator.getContentPane().add(btnLoadMoveSeq, "4, 12");
+
+		JButton btnSaveMoveSeq = new JButton("save...");
+		btnSaveMoveSeq.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new Matrix(GUI.this.emisSeq);
+				JFileChooser fc = new JFileChooser();
+
+				if (fc.showSaveDialog((Component) e.getSource()) == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					try {
+						FileWriter fw = new FileWriter(file);
+						fw.write(GUI.this.movSeq.toString());
+						fw.flush();
+						fw.close();
+						GUI.this.displayStatus("File was written successfully!");
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
 			}
 		});
-		this.frmEmissiongenerator.getContentPane().add(btnMatrix, "8, 10");
+		btnSaveMoveSeq.setToolTipText("Save the movementsequence to a file");
+		this.frmEmissiongenerator.getContentPane().add(btnSaveMoveSeq, "6, 12");
 
-		JButton btnSave = new JButton("save to file...");
-		btnSave.setToolTipText("Save the emissionsequence to a file");
-		this.frmEmissiongenerator.getContentPane().add(btnSave, "10, 10");
-		btnSave.addActionListener(new ActionListener() {
+		JLabel lblEmissionsequence_1 = new JLabel("Emissionsequence:");
+		this.frmEmissiongenerator.getContentPane().add(lblEmissionsequence_1,
+				"8, 12");
+
+		JButton btnLoadEmisSeq = new JButton("load...");
+		btnLoadEmisSeq.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fc = new JFileChooser();
+
+				if (fc.showOpenDialog((Component) e.getSource()) == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					try {
+						GUI.this.emisSeq = new Emissionsequence(new Scanner(
+								file).useDelimiter("\\A").next());
+						GUI.this.displayEmissionsequence("File was read successfully!");
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		btnLoadEmisSeq.setToolTipText("load a emissionsequence from a file");
+		this.frmEmissiongenerator.getContentPane()
+				.add(btnLoadEmisSeq, "10, 12");
+
+		JButton btnSaveEmisSeq = new JButton("save...");
+		btnSaveEmisSeq.setToolTipText("Save the emissionsequence to a file");
+		this.frmEmissiongenerator.getContentPane()
+				.add(btnSaveEmisSeq, "12, 12");
+		btnSaveEmisSeq.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -233,6 +305,7 @@ public class GUI {
 						fw.write(GUI.this.emisSeq.toString());
 						fw.flush();
 						fw.close();
+						GUI.this.displayStatus("File was written successfully!");
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -253,9 +326,23 @@ public class GUI {
 				.intValue();
 		this.model = this.modelFactory.createModel(this.comboModel
 				.getSelectedIndex());
-		Movementsequence movSeq = this.model.generateMovementsequence(size);
-		this.emisSeq = new Emissionsequence(movSeq);
-		this.updateReadout("Emissionsequence was generated successfully!");
+		this.movSeq = this.model.generateMovementsequence(size);
+		this.emisSeq = new Emissionsequence(this.movSeq);
+		this.displayEmissionsequence("Emissionsequence was generated successfully!");
+	}
+
+	/**
+	 * Displays the emissionsequence in the readoutpanel.
+	 * 
+	 * @param s
+	 *            the string to display
+	 */
+	private void displayEmissionsequence(String s) {
+		if (this.chckbxShow.isSelected()) {
+			this.textReadout.setText(this.emisSeq.toString());
+		} else {
+			this.textReadout.setText(s);
+		}
 	}
 
 	/**
@@ -264,11 +351,8 @@ public class GUI {
 	 * @param s
 	 *            the string to display
 	 */
-	private void updateReadout(String s) {
-		if (this.chckbxShow.isSelected()) {
-			this.textReadout.setText(this.emisSeq.toString());
-		} else {
-			this.textReadout.setText(s);
-		}
+	private void displayStatus(String s) {
+
+		this.textReadout.setText(s);
 	}
 }
