@@ -1,5 +1,7 @@
 package data.model;
 
+import java.util.Arrays;
+
 /**
  * This class is a factory which creates the selected model. It's implemented as
  * a sigleton.
@@ -33,12 +35,11 @@ public class ModelFactory {
 	 * @return the created model
 	 */
 	public Model createModel(int id) {
-		switch (id) {
-		case 0:
+		if (id == Arrays.asList(MODELLIST).indexOf("MoveModel")) {
 			return new MoveModel(MODELLIST[id], id);
-		case 1:
+		} else if (id == Arrays.asList(MODELLIST).indexOf("EatModel")) {
 			return new EatModel(MODELLIST[id], id);
-		default:
+		} else {
 			throw new IllegalArgumentException("Wrong model number!");
 		}
 	}
