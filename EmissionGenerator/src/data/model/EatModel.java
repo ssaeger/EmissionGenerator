@@ -8,11 +8,17 @@ import org.uncommons.maths.random.ExponentialGenerator;
 import data.Move;
 import data.Movementsequence;
 
+/**
+ * This class represents a model which generates a particular movementsequence.
+ * 
+ * @author Sebastian
+ * 
+ */
 public class EatModel extends Model {
 
-	public EatModel() {
-		this.name = "EatModel";
-		this.id = 1;
+	public EatModel(String name, int id) {
+		this.name = name;
+		this.id = id;
 	}
 
 	@Override

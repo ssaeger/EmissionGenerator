@@ -8,11 +8,17 @@ import org.uncommons.maths.random.ExponentialGenerator;
 import data.Move;
 import data.Movementsequence;
 
+/**
+ * This class represents a model which generates a particular movementsequence.
+ * 
+ * @author Sebastian
+ * 
+ */
 public class MoveModel extends Model {
 
-	public MoveModel() {
-		this.name = "MoveModel";
-		this.id = 0;
+	public MoveModel(String name, int id) {
+		this.name = name;
+		this.id = id;
 	}
 
 	@Override

@@ -7,6 +7,13 @@ import javax.swing.table.DefaultTableModel;
 
 import org.uncommons.maths.number.NumberGenerator;
 
+/**
+ * This class contains the emissionsequence and functions to create and modify
+ * the emissionsequence. Furthermore in this class the emissionIDs are defined.
+ * 
+ * @author Sebastian
+ * 
+ */
 public class Emissionsequence {
 
 	// The IDs of the emissions are encoded as following:

@@ -245,6 +245,9 @@ public class GUI {
 		this.confounderFactory = ConfounderFactory.getInstance();
 	}
 
+	/**
+	 * Initiates the prozess to generate an emissionsequence.
+	 */
 	private void generateSequence() {
 		int size = Integer.valueOf(this.spinnerSize.getValue().toString())
 				.intValue();
@@ -255,6 +258,12 @@ public class GUI {
 		this.updateReadout("Emissionsequence was generated successfully!");
 	}
 
+	/**
+	 * Displays the given string in the readoutpanel.
+	 * 
+	 * @param s
+	 *            the string to display
+	 */
 	private void updateReadout(String s) {
 		if (this.chckbxShow.isSelected()) {
 			this.textReadout.setText(this.emisSeq.toString());
