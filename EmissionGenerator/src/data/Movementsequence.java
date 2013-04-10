@@ -1,5 +1,6 @@
 package data;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -14,6 +15,10 @@ public class Movementsequence {
 
 	public Movementsequence() {
 		this.sequence = new LinkedList<>();
+	}
+
+	public Movementsequence(String movSeq) {
+		this.sequence = this.fromString(movSeq);
 	}
 
 	/**
@@ -39,4 +44,35 @@ public class Movementsequence {
 		return this.sequence;
 	}
 
+	@Override
+	public String toString() {
+		String s = "";
+		Iterator<Move> iterator = this.sequence.iterator();
+
+		s += iterator.next().toString();
+
+		while (iterator.hasNext()) {
+			s += "," + iterator.next().toString();
+		}
+		return s + "\n";
+	}
+
+	public LinkedList<Move> fromString(String moveString) {
+		LinkedList<Move> sequenceFromString = new LinkedList<Move>();
+
+		// remove \n at the last position of the string
+		moveString = moveString.substring(0, moveString.length() - 1);
+		String[] moveArray = moveString.split(",");
+		String[] moveCoordinates;
+		for (int i = 0; i < moveArray.length; i++) {
+			// remove the braces ( )
+			moveArray[i] = moveArray[i].substring(1, moveArray[i].length() - 1);
+			moveCoordinates = moveArray[i].split("\\|");
+			// convert to Double
+			sequenceFromString.add(new Move(Double
+					.parseDouble(moveCoordinates[0]), Double
+					.parseDouble(moveCoordinates[1])));
+		}
+		return sequenceFromString;
+	}
 }

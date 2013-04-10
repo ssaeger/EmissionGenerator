@@ -68,4 +68,9 @@ public class Move {
 	public double getY() {
 		return this.y;
 	}
+
+	@Override
+	public String toString() {
+		return "(" + this.x + "|" + this.y + ")";
+	}
 }

@@ -234,6 +234,26 @@ public class GUI {
 				"2, 12");
 
 		JButton btnLoadMoveSeq = new JButton("load...");
+		btnLoadMoveSeq.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fc = new JFileChooser();
+
+				if (fc.showOpenDialog((Component) e.getSource()) == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					try {
+						GUI.this.movSeq = new Movementsequence(
+								new Scanner(file).useDelimiter("\\A").next());
+						GUI.this.emisSeq = new Emissionsequence(GUI.this.movSeq);
+						GUI.this.displayEmissionsequence("File was read successfully!");
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		;
 		btnLoadMoveSeq.setToolTipText("load a movementsequence from a file");
 		this.frmEmissiongenerator.getContentPane().add(btnLoadMoveSeq, "4, 12");
 
