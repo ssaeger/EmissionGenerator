@@ -31,7 +31,7 @@ public class EatModel extends Model {
 		try {
 			rnd = new AESCounterRNG();
 			expGen = new ExponentialGenerator(1, rnd);
-			for (int i = 0; i < size; i++) {
+			for (int i = 0; i <= size; i++) {
 				// generate current move
 				aktMove = new Move(rnd.nextDouble(), rnd.nextDouble());
 
