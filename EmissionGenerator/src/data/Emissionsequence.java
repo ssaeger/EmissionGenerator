@@ -383,6 +383,7 @@ public class Emissionsequence {
 		emisString = emisString.substring(0, emisString.length() - 1);
 		String[] emissionArray = emisString.split(",");
 		for (int i = 0; i < emissionArray.length; i++) {
+			// remove the " and convert to Integer
 			sequenceFromString.add(Integer.parseInt(emissionArray[i].substring(
 					1, emissionArray[i].length() - 1)));
 		}
