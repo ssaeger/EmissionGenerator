@@ -296,6 +296,7 @@ public class GUI {
 					try {
 						GUI.this.emisSeq = new Emissionsequence(new Scanner(
 								file).useDelimiter("\\A").next());
+						GUI.this.model = null;
 						GUI.this.displayEmissionsequence("File was read successfully!");
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
