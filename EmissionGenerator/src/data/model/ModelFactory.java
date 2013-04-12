@@ -1,6 +1,5 @@
 package data.model;
 
-import java.util.Arrays;
 
 /**
  * This class is a factory which creates the selected model. It's implemented as
@@ -35,9 +34,10 @@ public class ModelFactory {
 	 * @return the created model
 	 */
 	public Model createModel(int id) {
-		if (id == Arrays.asList(MODELLIST).indexOf("MoveModel")) {
+		String modelName = MODELLIST[id];
+		if (modelName.equals("MoveModel")) {
 			return new MoveModel(MODELLIST[id], id);
-		} else if (id == Arrays.asList(MODELLIST).indexOf("EatModel")) {
+		} else if (modelName.equals("EatModel")) {
 			return new EatModel(MODELLIST[id], id);
 		} else {
 			throw new IllegalArgumentException("Wrong model number!");

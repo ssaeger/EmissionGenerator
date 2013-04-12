@@ -1,6 +1,5 @@
 package data;
 
-import java.util.Arrays;
 import java.util.Random;
 
 import org.uncommons.maths.number.NumberGenerator;
@@ -38,11 +37,10 @@ public class ConfounderFactory {
 	 * @return the created confounder
 	 */
 	public NumberGenerator<?> createConfounder(int id) {
-		if (id == Arrays.asList(CONFOUNDERLIST).indexOf(
-				"Normal distribution, \u03C3 = 1")) {
+		String confounderName = CONFOUNDERLIST[id];
+		if (confounderName.equals("Normal distribution, \u03C3 = 1")) {
 			return new GaussianGenerator(0, 1, new Random());
-		} else if (id == Arrays.asList(CONFOUNDERLIST).indexOf(
-				"Normal distribution, \u03C3 = 2")) {
+		} else if (confounderName.equals("Normal distribution, \u03C3 = 2")) {
 			return new GaussianGenerator(0, 2, new Random());
 		} else {
 			throw new IllegalArgumentException("Wrong confounder number!");
