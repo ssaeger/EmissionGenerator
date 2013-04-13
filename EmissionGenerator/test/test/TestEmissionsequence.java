@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.LinkedList;
 
-import model.Emissionsequence;
+import model.emission.EmissionsequenceModel;
 
 import org.junit.Test;
 
@@ -16,14 +16,14 @@ import org.junit.Test;
 public class TestEmissionsequence {
 
 	/**
-	 * Test method for {@link model.Emissionsequence#Emissionsequence(String)}.
+	 * Test method for {@link model.emission.EmissionsequenceModel#Emissionsequence(String)}.
 	 */
 	@Test
 	public void testEmissionsequence() {
 		// set up SUT
 		String emissionString = "\"1\",\"2\",\"3\"\n";
 		// execute SUT
-		Emissionsequence emisSeq = new Emissionsequence(emissionString);
+		EmissionsequenceModel emisSeq = new EmissionsequenceModel(emissionString);
 		// verify outcome
 		assertEquals(emissionString, emisSeq.toString());
 		// tear down
@@ -31,7 +31,7 @@ public class TestEmissionsequence {
 	}
 
 	/**
-	 * Test method for {@link model.Emissionsequence#getEmissionsAsArray()}.
+	 * Test method for {@link model.emission.EmissionsequenceModel#getEmissionsAsArray()}.
 	 */
 	@Test
 	public void testGetEmissionsAsArray() {
@@ -43,7 +43,7 @@ public class TestEmissionsequence {
 		sequence.add(3);
 
 		// execute SUT
-		Emissionsequence emisSeq = new Emissionsequence(sequence);
+		EmissionsequenceModel emisSeq = new EmissionsequenceModel(sequence);
 		emissionArray = emisSeq.getEmissionsAsArray();
 		// verify outcome
 		assertEquals(emissionArray.length, sequence.size());
@@ -52,7 +52,7 @@ public class TestEmissionsequence {
 	}
 
 	/**
-	 * Test method for {@link model.Emissionsequence#getAbsMatrix()}.
+	 * Test method for {@link model.emission.EmissionsequenceModel#getAbsMatrix()}.
 	 */
 	@Test
 	public void testGetAbsMatrix() {
@@ -63,7 +63,7 @@ public class TestEmissionsequence {
 		sequence.add(1);
 
 		// execute SUT
-		Emissionsequence emisSeq = new Emissionsequence(sequence);
+		EmissionsequenceModel emisSeq = new EmissionsequenceModel(sequence);
 		emisSeq.createMatrix();
 		int firstAbs = (int) emisSeq.getAbsMatrix().getValueAt(0, 1);
 		// verify outcome
@@ -73,7 +73,7 @@ public class TestEmissionsequence {
 	}
 
 	/**
-	 * Test method for {@link model.Emissionsequence#getRelMatrix()}.
+	 * Test method for {@link model.emission.EmissionsequenceModel#getRelMatrix()}.
 	 */
 	@Test
 	public void testGetRelMatrix() {
@@ -84,7 +84,7 @@ public class TestEmissionsequence {
 		sequence.add(1);
 
 		// execute SUT
-		Emissionsequence emisSeq = new Emissionsequence(sequence);
+		EmissionsequenceModel emisSeq = new EmissionsequenceModel(sequence);
 		emisSeq.createMatrix();
 
 		// to avoid assertEquals with doubles

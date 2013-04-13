@@ -9,27 +9,30 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.TableModel;
 
-import model.Emissionsequence;
+import presenter.IMatrixPresenter;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
+public class MatrixView extends JFrame implements IMatrixView {
 
-public class MatrixView extends JFrame {
+	/**
+	 * The presenter to communicate with.
+	 */
+	IMatrixPresenter matrixPresenter;
 
 	private final JPanel contentPane;
 	private final JTable table;
 	private final JToggleButton tglbtnRelative;
-	private final Emissionsequence emisSeq;
 
 	/**
 	 * Create the frame.
 	 */
-	public MatrixView(Emissionsequence sequence) {
-		this.emisSeq = sequence;
+	public MatrixView() {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setBounds(100, 100, 700, 447);
 		this.contentPane = new JPanel();
@@ -54,24 +57,36 @@ public class MatrixView extends JFrame {
 		this.contentPane.add(scrollPane, "2, 2, 7, 1, fill, fill");
 
 		this.table = new JTable();
-		this.table.setModel(this.emisSeq.createMatrix());
 		scrollPane.setViewportView(this.table);
 
 		this.tglbtnRelative = new JToggleButton("Relative frequencies");
 		this.tglbtnRelative.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (MatrixView.this.tglbtnRelative.isSelected()) {
-					MatrixView.this.table.setModel(MatrixView.this.emisSeq
-							.getRelMatrix());
-				} else {
-					MatrixView.this.table.setModel(MatrixView.this.emisSeq
-							.getAbsMatrix());
-				}
+				MatrixView.this.changeAppearance();
 			}
 		});
 		this.contentPane.add(this.tglbtnRelative, "6, 4");
 		this.setVisible(true);
+	}
+
+	private void changeAppearance() {
+		this.matrixPresenter.changeAppearence(this.tglbtnRelative.isSelected());
+	}
+
+	@Override
+	public void setTableModel(TableModel tableModel) {
+		this.table.setModel(tableModel);
+	}
+
+	@Override
+	public void setPresenter(IMatrixPresenter matrixPresenter) {
+		this.matrixPresenter = matrixPresenter;
+	}
+
+	@Override
+	public IMatrixPresenter getMatrixPresenter() {
+		return this.matrixPresenter;
 	}
 
 }

@@ -2,6 +2,8 @@ package presenter;
 
 import java.awt.event.ActionEvent;
 
+import view.IMainView;
+
 public interface IMainPresenter {
 
 	/**
@@ -63,4 +65,9 @@ public interface IMainPresenter {
 	 * Creates a stochastic matrix of the emissionsequence.
 	 */
 	void createStochasticMatrix();
+
+	/**
+	 * Sets the view.
+	 */
+	void setView(IMainView view);
 }

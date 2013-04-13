@@ -23,9 +23,4 @@ public interface IMainView {
 	int getConfounderlID();
 
 	boolean getBoxStatus();
-
-	// void updateModelFromView();
-	//
-	// void updateViewFromModel();
-
 }

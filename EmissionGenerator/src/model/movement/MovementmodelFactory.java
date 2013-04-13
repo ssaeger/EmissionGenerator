@@ -1,8 +1,5 @@
-package model;
+package model.movement;
 
-import movement.EatModel;
-import movement.MoveModel;
-import movement.Movementmodel;
 
 
 
@@ -13,20 +10,20 @@ import movement.Movementmodel;
  * @author Sebastian
  * 
  */
-public class ModelFactory {
+public class MovementmodelFactory {
 	/**
 	 * Array with the names of all models
 	 */
 	public static final String[] MODELLIST = { "MoveModel", "EatModel" };
 
-	private static ModelFactory instance;
+	private static MovementmodelFactory instance;
 
-	private ModelFactory() {
+	private MovementmodelFactory() {
 	}
 
-	public static ModelFactory getInstance() {
+	public static MovementmodelFactory getInstance() {
 		if (instance == null) {
-			instance = new ModelFactory();
+			instance = new MovementmodelFactory();
 		}
 		return instance;
 	}

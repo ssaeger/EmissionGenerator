@@ -16,7 +16,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
 
 import model.ConfounderFactory;
-import model.ModelFactory;
+import model.emission.EmissionsequenceModel;
+import model.movement.MovementmodelFactory;
 import presenter.IMainPresenter;
 import presenter.MainPresenter;
 
@@ -49,9 +50,12 @@ public class MainView implements IMainView {
 				try {
 					UIManager.setLookAndFeel(UIManager
 							.getSystemLookAndFeelClassName());
-					MainView mainView = new MainView();
-					mainView.setPresenter(new MainPresenter(mainView));
-					mainView.frmEmissiongenerator.setVisible(true);
+
+					IMainPresenter presenter = new MainPresenter(
+							new EmissionsequenceModel());
+					IMainView view = new MainView();
+					presenter.setView(view);
+					view.setPresenter(presenter);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -108,7 +112,7 @@ public class MainView implements IMainView {
 		this.frmEmissiongenerator.getContentPane().add(lblModel,
 				"2, 2, right, default");
 
-		this.comboMovementmodel = new JComboBox(ModelFactory.MODELLIST);
+		this.comboMovementmodel = new JComboBox(MovementmodelFactory.MODELLIST);
 		this.frmEmissiongenerator.getContentPane().add(this.comboMovementmodel,
 				"4, 2, fill, default");
 
@@ -244,6 +248,7 @@ public class MainView implements IMainView {
 				MainView.this.saveEmissionsequenceToFile(e);
 			}
 		});
+		this.frmEmissiongenerator.setVisible(true);
 	}
 
 	private void generateSequences() {

@@ -1,9 +1,7 @@
-package movement;
+package model.movement;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-
-
 
 /**
  * This class contains the movementsequence and functions to create and modify
@@ -13,7 +11,7 @@ import java.util.LinkedList;
  * 
  */
 public class Movementsequence {
-	LinkedList<Move> sequence;
+	private final LinkedList<Move> sequence;
 
 	public Movementsequence() {
 		this.sequence = new LinkedList<>();
@@ -59,7 +57,7 @@ public class Movementsequence {
 		return s + "\n";
 	}
 
-	public LinkedList<Move> fromString(String moveString) {
+	private LinkedList<Move> fromString(String moveString) {
 		LinkedList<Move> sequenceFromString = new LinkedList<Move>();
 
 		// remove \n at the last position of the string

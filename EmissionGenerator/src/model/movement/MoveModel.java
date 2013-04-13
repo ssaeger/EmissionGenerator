@@ -1,4 +1,4 @@
-package movement;
+package model.movement;
 
 import java.security.GeneralSecurityException;
 

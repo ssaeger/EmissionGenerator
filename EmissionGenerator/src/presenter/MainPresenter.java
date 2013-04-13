@@ -10,10 +10,11 @@ import java.util.Scanner;
 import javax.swing.JFileChooser;
 
 import model.ConfounderFactory;
-import model.Emissionsequence;
-import model.ModelFactory;
-import movement.Movementmodel;
-import movement.Movementsequence;
+import model.emission.EmissionsequenceModel;
+import model.emission.IEmissionsequenceModel;
+import model.movement.Movementmodel;
+import model.movement.MovementmodelFactory;
+import model.movement.Movementsequence;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -25,22 +26,23 @@ import org.uncommons.maths.number.NumberGenerator;
 
 import view.HistogramView;
 import view.IMainView;
+import view.IMatrixView;
 import view.MatrixView;
 
 public class MainPresenter implements IMainPresenter {
 
-	private final IMainView mainView;
+	private IMainView mainView;
+	private IEmissionsequenceModel emissionsequenceModel;
 
-	private final ModelFactory modelFactory;
+	private final MovementmodelFactory modelFactory;
 	private final ConfounderFactory confounderFactory;
 	private Movementmodel model;
 	private NumberGenerator<?> confounder;
-	private Emissionsequence emisSeq;
 	private Movementsequence movSeq;
 
-	public MainPresenter(IMainView mainView) {
-		this.mainView = mainView;
-		this.modelFactory = ModelFactory.getInstance();
+	public MainPresenter(IEmissionsequenceModel model) {
+		this.emissionsequenceModel = model;
+		this.modelFactory = MovementmodelFactory.getInstance();
 		this.confounderFactory = ConfounderFactory.getInstance();
 	}
 
@@ -50,7 +52,7 @@ public class MainPresenter implements IMainPresenter {
 				.getMovementmodelID());
 		this.movSeq = this.model.generateMovementsequence(Integer
 				.valueOf(this.mainView.getLengthOfEmissionsequence()));
-		this.emisSeq = new Emissionsequence(this.movSeq);
+		this.emissionsequenceModel = new EmissionsequenceModel(this.movSeq);
 		this.displayStatus("Emissionsequence was generated successfully!");
 
 	}
@@ -59,14 +61,15 @@ public class MainPresenter implements IMainPresenter {
 	public void interfereSequence() {
 		this.confounder = this.confounderFactory.createConfounder(this.mainView
 				.getConfounderlID());
-		this.emisSeq = this.emisSeq.interfereWith(this.confounder);
+		this.emissionsequenceModel = this.emissionsequenceModel
+				.interfereWith(this.confounder);
 		this.displayStatus("Emissionsequence interfered!");
 	}
 
 	@Override
 	public void displayStatus(String s) {
 		if (this.mainView.getBoxStatus()) {
-			this.mainView.displayStatus(this.emisSeq.toString());
+			this.mainView.displayStatus(this.emissionsequenceModel.toString());
 		} else {
 			this.mainView.displayStatus(s);
 		}
@@ -80,7 +83,7 @@ public class MainPresenter implements IMainPresenter {
 			File file = fc.getSelectedFile();
 			try {
 				FileWriter fw = new FileWriter(file);
-				fw.write(this.emisSeq.toString());
+				fw.write(this.emissionsequenceModel.toString());
 				fw.flush();
 				fw.close();
 				this.displayStatus("File was written successfully!");
@@ -98,8 +101,8 @@ public class MainPresenter implements IMainPresenter {
 		if (fc.showOpenDialog((Component) e.getSource()) == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
 			try {
-				this.emisSeq = new Emissionsequence(new Scanner(file)
-						.useDelimiter("\\A").next());
+				this.emissionsequenceModel = new EmissionsequenceModel(
+						new Scanner(file).useDelimiter("\\A").next());
 				this.model = null;
 				this.displayStatus("File was read successfully!");
 			} catch (IOException e1) {
@@ -118,7 +121,8 @@ public class MainPresenter implements IMainPresenter {
 			try {
 				this.movSeq = new Movementsequence(new Scanner(file)
 						.useDelimiter("\\A").next());
-				this.emisSeq = new Emissionsequence(this.movSeq);
+				this.emissionsequenceModel = new EmissionsequenceModel(
+						this.movSeq);
 				this.displayStatus("File was read successfully!");
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -150,8 +154,8 @@ public class MainPresenter implements IMainPresenter {
 	public void createHistogram() {
 		HistogramDataset histData = new HistogramDataset();
 		histData.setType(HistogramType.FREQUENCY);
-		double[] values = this.emisSeq.getEmissionsAsArray();
-		histData.addSeries("H1", values, Emissionsequence.EMISSIONCOUNT);
+		double[] values = this.emissionsequenceModel.getEmissionsAsArray();
+		histData.addSeries("H1", values, EmissionsequenceModel.EMISSIONCOUNT);
 
 		JFreeChart chart;
 		if (this.model != null) {
@@ -168,7 +172,17 @@ public class MainPresenter implements IMainPresenter {
 
 	@Override
 	public void createStochasticMatrix() {
-		new MatrixView(this.emisSeq);
+		IMatrixPresenter matrixPresenter = new MatrixPresenter();
+		matrixPresenter.setModel(this.emissionsequenceModel);
+		IMatrixView matrixView = new MatrixView();
+		matrixPresenter.setView(matrixView);
+		matrixView.setPresenter(matrixPresenter);
+		matrixPresenter.createMatrix();
+	}
+
+	@Override
+	public void setView(IMainView view) {
+		this.mainView = view;
 	}
 
 }

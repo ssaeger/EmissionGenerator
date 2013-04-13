@@ -1,4 +1,4 @@
-package movement;
+package model.movement;
 
 /**
  * This class represents a single move.

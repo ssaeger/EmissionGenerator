@@ -1,16 +1,14 @@
-package model;
+package model.emission;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.swing.table.DefaultTableModel;
 
-
-import movement.Move;
-import movement.Movementsequence;
+import model.movement.Move;
+import model.movement.Movementsequence;
 
 import org.uncommons.maths.number.NumberGenerator;
-
 
 /**
  * This class contains the emissionsequence and functions to create and modify
@@ -19,7 +17,7 @@ import org.uncommons.maths.number.NumberGenerator;
  * @author Sebastian
  * 
  */
-public class Emissionsequence {
+public class EmissionsequenceModel implements IEmissionsequenceModel {
 
 	// The IDs of the emissions are encoded as following:
 	// First a character for the velocity:
@@ -77,7 +75,7 @@ public class Emissionsequence {
 	/**
 	 * Creates a new emissionsequence
 	 */
-	public Emissionsequence() {
+	public EmissionsequenceModel() {
 		this.sequence = new LinkedList<>();
 		this.initializeNewMarkovChains();
 		this.createEmissionList();
@@ -86,7 +84,7 @@ public class Emissionsequence {
 	/**
 	 * Creates a new emissionsequence object from a list of emissions.
 	 */
-	public Emissionsequence(LinkedList<Integer> sequence) {
+	public EmissionsequenceModel(LinkedList<Integer> sequence) {
 		this.sequence = sequence;
 		this.initializeNewMarkovChains();
 		this.createEmissionList();
@@ -95,7 +93,7 @@ public class Emissionsequence {
 	/**
 	 * Creates a new emissionsequence object from a movementsequence.
 	 */
-	public Emissionsequence(Movementsequence movSeq) {
+	public EmissionsequenceModel(Movementsequence movSeq) {
 		this.sequence = new LinkedList<>();
 		this.initializeNewMarkovChains();
 		this.createEmissionList();
@@ -106,7 +104,7 @@ public class Emissionsequence {
 	 * Creates a new emissionsequence object from a String of emissions. Can be
 	 * used when a an emissionsequence is loaded from a file.
 	 */
-	public Emissionsequence(String emisString) {
+	public EmissionsequenceModel(String emisString) {
 		this.sequence = this.fromString(emisString);
 		this.initializeNewMarkovChains();
 		this.createEmissionList();
@@ -159,7 +157,7 @@ public class Emissionsequence {
 	 *            the following move
 	 * @return the emissionid of the determined emission
 	 */
-	public int getEmissionId(Move m1, Move m2) {
+	private int getEmissionId(Move m1, Move m2) {
 		// compute the difference between the lengths of the movementvectors
 		double diff = m1.lengthDifference(m2);
 
@@ -223,11 +221,7 @@ public class Emissionsequence {
 		}
 	}
 
-	/**
-	 * Converts the sequence of emissions from a list into an array of doubles
-	 * 
-	 * @return array with the emissions as doubles
-	 */
+	@Override
 	public double[] getEmissionsAsArray() {
 		double[] emissionArray = new double[this.sequence.size()];
 		int i = 0;
@@ -237,14 +231,8 @@ public class Emissionsequence {
 		return emissionArray;
 	}
 
-	/**
-	 * Interferes the emissionsequence with a given confounder
-	 * 
-	 * @param confounder
-	 *            the confounder which should be used for the interference
-	 * @return the interfered emissionsequence
-	 */
-	public Emissionsequence interfereWith(NumberGenerator<?> confounder) {
+	@Override
+	public EmissionsequenceModel interfereWith(NumberGenerator<?> confounder) {
 		LinkedList<Integer> interferedSequence = new LinkedList<>();
 		int tmpEmission;
 		for (Integer i : this.sequence) {
@@ -257,7 +245,7 @@ public class Emissionsequence {
 			}
 			interferedSequence.add(tmpEmission);
 		}
-		return new Emissionsequence(interferedSequence);
+		return new EmissionsequenceModel(interferedSequence);
 	}
 
 	/**
@@ -300,13 +288,7 @@ public class Emissionsequence {
 		}
 	}
 
-	/**
-	 * Creates a DefaultTableModel from the absolute markovchain. This function
-	 * is only called when the GUI creates a new matrix and it's needed that the
-	 * markovchains are generated for the first time.
-	 * 
-	 * @return the DefaulttableModel with the absolute frequencies
-	 */
+	@Override
 	public DefaultTableModel createMatrix() {
 		// +1 because the first column contains the caption
 		DefaultTableModel tableModel = new DefaultTableModel(EMISSIONCOUNT,
@@ -326,11 +308,7 @@ public class Emissionsequence {
 		return tableModel;
 	}
 
-	/**
-	 * Creates a DefaultTableModel from the absolute markovchain.
-	 * 
-	 * @return the DefaulttableModel with the absolute frequencies
-	 */
+	@Override
 	public DefaultTableModel getAbsMatrix() {
 		// +1 because the first column contains the caption
 		DefaultTableModel tableModel = new DefaultTableModel(EMISSIONCOUNT,
@@ -348,11 +326,7 @@ public class Emissionsequence {
 		return tableModel;
 	}
 
-	/**
-	 * Creates a DefaultTableModel from the relative markovchain.
-	 * 
-	 * @return the DefaulttableModel with the relative frequencies
-	 */
+	@Override
 	public DefaultTableModel getRelMatrix() {
 		// +1 because the first column contains the caption
 		DefaultTableModel tableModel = new DefaultTableModel(EMISSIONCOUNT,
@@ -370,6 +344,7 @@ public class Emissionsequence {
 		return tableModel;
 	}
 
+	@Override
 	public LinkedList<Integer> getSequence() {
 		return this.sequence;
 	}
