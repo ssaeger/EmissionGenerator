@@ -4,9 +4,10 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.LinkedList;
 
+import model.Emissionsequence;
+
 import org.junit.Test;
 
-import data.Emissionsequence;
 
 /**
  * @author Sebastian
@@ -15,7 +16,7 @@ import data.Emissionsequence;
 public class TestEmissionsequence {
 
 	/**
-	 * Test method for {@link data.Emissionsequence#Emissionsequence(String)}.
+	 * Test method for {@link model.Emissionsequence#Emissionsequence(String)}.
 	 */
 	@Test
 	public void testEmissionsequence() {
@@ -30,7 +31,7 @@ public class TestEmissionsequence {
 	}
 
 	/**
-	 * Test method for {@link data.Emissionsequence#getEmissionsAsArray()}.
+	 * Test method for {@link model.Emissionsequence#getEmissionsAsArray()}.
 	 */
 	@Test
 	public void testGetEmissionsAsArray() {
@@ -51,7 +52,7 @@ public class TestEmissionsequence {
 	}
 
 	/**
-	 * Test method for {@link data.Emissionsequence#getAbsMatrix()}.
+	 * Test method for {@link model.Emissionsequence#getAbsMatrix()}.
 	 */
 	@Test
 	public void testGetAbsMatrix() {
@@ -72,7 +73,7 @@ public class TestEmissionsequence {
 	}
 
 	/**
-	 * Test method for {@link data.Emissionsequence#getRelMatrix()}.
+	 * Test method for {@link model.Emissionsequence#getRelMatrix()}.
 	 */
 	@Test
 	public void testGetRelMatrix() {

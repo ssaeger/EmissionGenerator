@@ -1,4 +1,4 @@
-package ui;
+package view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,14 +10,15 @@ import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.border.EmptyBorder;
 
+import model.Emissionsequence;
+
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
-import data.Emissionsequence;
 
-public class Matrix extends JFrame {
+public class MatrixView extends JFrame {
 
 	private final JPanel contentPane;
 	private final JTable table;
@@ -27,7 +28,7 @@ public class Matrix extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Matrix(Emissionsequence sequence) {
+	public MatrixView(Emissionsequence sequence) {
 		this.emisSeq = sequence;
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setBounds(100, 100, 700, 447);
@@ -60,11 +61,11 @@ public class Matrix extends JFrame {
 		this.tglbtnRelative.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (Matrix.this.tglbtnRelative.isSelected()) {
-					Matrix.this.table.setModel(Matrix.this.emisSeq
+				if (MatrixView.this.tglbtnRelative.isSelected()) {
+					MatrixView.this.table.setModel(MatrixView.this.emisSeq
 							.getRelMatrix());
 				} else {
-					Matrix.this.table.setModel(Matrix.this.emisSeq
+					MatrixView.this.table.setModel(MatrixView.this.emisSeq
 							.getAbsMatrix());
 				}
 			}

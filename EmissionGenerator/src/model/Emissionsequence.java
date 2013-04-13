@@ -1,11 +1,16 @@
-package data;
+package model;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.swing.table.DefaultTableModel;
 
+
+import movement.Move;
+import movement.Movementsequence;
+
 import org.uncommons.maths.number.NumberGenerator;
+
 
 /**
  * This class contains the emissionsequence and functions to create and modify

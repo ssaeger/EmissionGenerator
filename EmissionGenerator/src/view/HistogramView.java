@@ -1,15 +1,15 @@
-package ui;
+package view;
 
 import javax.swing.JFrame;
 
 import org.jfree.chart.ChartPanel;
 
-public class Histogram extends JFrame {
+public class HistogramView extends JFrame {
 
 	/**
 	 * Create the frame.
 	 */
-	public Histogram(ChartPanel chart) {
+	public HistogramView(ChartPanel chart) {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setBounds(100, 100, 450, 300);
 		this.setContentPane(chart);

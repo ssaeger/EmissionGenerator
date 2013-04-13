@@ -1,18 +1,12 @@
-package ui;
+package view;
 
-import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -21,39 +15,29 @@ import javax.swing.JTextArea;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.statistics.HistogramDataset;
-import org.jfree.data.statistics.HistogramType;
-import org.uncommons.maths.number.NumberGenerator;
+import model.ConfounderFactory;
+import model.ModelFactory;
+import presenter.IMainPresenter;
+import presenter.MainPresenter;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
-import data.ConfounderFactory;
-import data.Emissionsequence;
-import data.Movementsequence;
-import data.model.Model;
-import data.model.ModelFactory;
+public class MainView implements IMainView {
 
-public class GUI {
+	/**
+	 * The presenter to communicate with.
+	 */
+	private IMainPresenter mainPresenter;
 
 	private JFrame frmEmissiongenerator;
 	private JSpinner spinnerSize;
-	private JComboBox comboModel;
+	private JComboBox comboMovementmodel;
 	private JComboBox comboConfounder;
 	private JTextArea textReadout;
 	private JCheckBox chckbxShow;
-	private ModelFactory modelFactory;
-	private ConfounderFactory confounderFactory;
-	private Model model;
-	private NumberGenerator<?> confounder;
-	private Emissionsequence emisSeq;
-	private Movementsequence movSeq;
 
 	/**
 	 * Launch the application.
@@ -65,8 +49,9 @@ public class GUI {
 				try {
 					UIManager.setLookAndFeel(UIManager
 							.getSystemLookAndFeelClassName());
-					GUI window = new GUI();
-					window.frmEmissiongenerator.setVisible(true);
+					MainView mainView = new MainView();
+					mainView.setPresenter(new MainPresenter(mainView));
+					mainView.frmEmissiongenerator.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -77,7 +62,7 @@ public class GUI {
 	/**
 	 * Create the application.
 	 */
-	public GUI() {
+	public MainView() {
 		this.initialize();
 	}
 
@@ -123,8 +108,8 @@ public class GUI {
 		this.frmEmissiongenerator.getContentPane().add(lblModel,
 				"2, 2, right, default");
 
-		this.comboModel = new JComboBox(ModelFactory.MODELLIST);
-		this.frmEmissiongenerator.getContentPane().add(this.comboModel,
+		this.comboMovementmodel = new JComboBox(ModelFactory.MODELLIST);
+		this.frmEmissiongenerator.getContentPane().add(this.comboMovementmodel,
 				"4, 2, fill, default");
 
 		JLabel lblConfounder = new JLabel("Confounder:");
@@ -151,7 +136,7 @@ public class GUI {
 		btnGenerate.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				GUI.this.generateSequence();
+				MainView.this.generateSequences();
 			}
 		});
 		this.frmEmissiongenerator.getContentPane().add(btnGenerate, "8, 4");
@@ -183,23 +168,7 @@ public class GUI {
 		btnHistogram.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				HistogramDataset histData = new HistogramDataset();
-				histData.setType(HistogramType.FREQUENCY);
-				double[] values = GUI.this.emisSeq.getEmissionsAsArray();
-				histData.addSeries("H1", values, Emissionsequence.EMISSIONCOUNT);
-
-				JFreeChart chart;
-				if (GUI.this.model != null) {
-					chart = ChartFactory.createHistogram(
-							GUI.this.model.getName(), "EmissionID",
-							"Frequency", histData, PlotOrientation.VERTICAL,
-							false, false, false);
-				} else {
-					chart = ChartFactory.createHistogram("unknown Model",
-							"EmissionID", "Frequency", histData,
-							PlotOrientation.VERTICAL, false, false, false);
-				}
-				new Histogram(new ChartPanel(chart));
+				MainView.this.createHistogram();
 			}
 		});
 
@@ -207,7 +176,7 @@ public class GUI {
 		btnMatrix.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new Matrix(GUI.this.emisSeq);
+				MainView.this.createStochasticMatrix();
 			}
 		});
 
@@ -215,12 +184,7 @@ public class GUI {
 		btnInterfere.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				GUI.this.confounder = GUI.this.confounderFactory
-						.createConfounder(GUI.this.comboConfounder
-								.getSelectedIndex());
-				GUI.this.emisSeq = GUI.this.emisSeq
-						.interfereWith(GUI.this.confounder);
-				GUI.this.displayEmissionsequence("Emissionsequence interfered!");
+				MainView.this.interfereSequence();
 			}
 		});
 		btnInterfere
@@ -237,20 +201,7 @@ public class GUI {
 		btnLoadMoveSeq.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
-
-				if (fc.showOpenDialog((Component) e.getSource()) == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					try {
-						GUI.this.movSeq = new Movementsequence(
-								new Scanner(file).useDelimiter("\\A").next());
-						GUI.this.emisSeq = new Emissionsequence(GUI.this.movSeq);
-						GUI.this.displayEmissionsequence("File was read successfully!");
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
+				MainView.this.loadMovementsequenceFromFile(e);
 			}
 		});
 		;
@@ -261,21 +212,7 @@ public class GUI {
 		btnSaveMoveSeq.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
-
-				if (fc.showSaveDialog((Component) e.getSource()) == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					try {
-						FileWriter fw = new FileWriter(file);
-						fw.write(GUI.this.movSeq.toString());
-						fw.flush();
-						fw.close();
-						GUI.this.displayStatus("File was written successfully!");
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
+				MainView.this.saveMovementsequenceToFile(e);
 			}
 		});
 		btnSaveMoveSeq.setToolTipText("Save the movementsequence to a file");
@@ -289,20 +226,7 @@ public class GUI {
 		btnLoadEmisSeq.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
-
-				if (fc.showOpenDialog((Component) e.getSource()) == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					try {
-						GUI.this.emisSeq = new Emissionsequence(new Scanner(
-								file).useDelimiter("\\A").next());
-						GUI.this.model = null;
-						GUI.this.displayEmissionsequence("File was read successfully!");
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
+				MainView.this.loadEmissionsequenceFromFile(e);
 			}
 		});
 		btnLoadEmisSeq.setToolTipText("load a emissionsequence from a file");
@@ -317,63 +241,76 @@ public class GUI {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
-
-				if (fc.showSaveDialog((Component) e.getSource()) == JFileChooser.APPROVE_OPTION) {
-					File file = fc.getSelectedFile();
-					try {
-						FileWriter fw = new FileWriter(file);
-						fw.write(GUI.this.emisSeq.toString());
-						fw.flush();
-						fw.close();
-						GUI.this.displayStatus("File was written successfully!");
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				}
+				MainView.this.saveEmissionsequenceToFile(e);
 			}
 		});
-
-		this.modelFactory = ModelFactory.getInstance();
-		this.confounderFactory = ConfounderFactory.getInstance();
 	}
 
-	/**
-	 * Initiates the prozess to generate an emissionsequence.
-	 */
-	private void generateSequence() {
-		int size = Integer.valueOf(this.spinnerSize.getValue().toString())
-				.intValue();
-		this.model = this.modelFactory.createModel(this.comboModel
-				.getSelectedIndex());
-		this.movSeq = this.model.generateMovementsequence(size);
-		this.emisSeq = new Emissionsequence(this.movSeq);
-		this.displayEmissionsequence("Emissionsequence was generated successfully!");
+	private void generateSequences() {
+		this.mainPresenter.generateSequences();
 	}
 
-	/**
-	 * Displays the emissionsequence in the readoutpanel.
-	 * 
-	 * @param s
-	 *            the string to display
-	 */
-	private void displayEmissionsequence(String s) {
-		if (this.chckbxShow.isSelected()) {
-			this.textReadout.setText(this.emisSeq.toString());
-		} else {
-			this.textReadout.setText(s);
-		}
+	private void saveEmissionsequenceToFile(ActionEvent e) {
+		this.mainPresenter.saveEmissionsequenceToFile(e);
 	}
 
-	/**
-	 * Displays the given string in the readoutpanel.
-	 * 
-	 * @param s
-	 *            the string to display
-	 */
-	private void displayStatus(String s) {
+	private void loadEmissionsequenceFromFile(ActionEvent e) {
+		this.mainPresenter.loadEmissionsequenceFromFile(e);
+	}
 
+	private void loadMovementsequenceFromFile(ActionEvent e) {
+		this.mainPresenter.loadMovementsequenceFromFile(e);
+	}
+
+	private void saveMovementsequenceToFile(ActionEvent e) {
+		this.mainPresenter.saveMovementsequenceToFile(e);
+	}
+
+	private void createHistogram() {
+		this.mainPresenter.createHistogram();
+	}
+
+	private void interfereSequence() {
+		this.mainPresenter.interfereSequence();
+	}
+
+	private void createStochasticMatrix() {
+		this.mainPresenter.createStochasticMatrix();
+	}
+
+	@Override
+	public void setPresenter(IMainPresenter mainPresenter) {
+		this.mainPresenter = mainPresenter;
+	}
+
+	@Override
+	public IMainPresenter getMainPresenter() {
+		return this.mainPresenter;
+	}
+
+	@Override
+	public void displayStatus(String s) {
 		this.textReadout.setText(s);
 	}
+
+	@Override
+	public int getLengthOfEmissionsequence() {
+		return Integer.valueOf(this.spinnerSize.getValue().toString());
+	}
+
+	@Override
+	public int getMovementmodelID() {
+		return this.comboMovementmodel.getSelectedIndex();
+	}
+
+	@Override
+	public int getConfounderlID() {
+		return this.comboConfounder.getSelectedIndex();
+	}
+
+	@Override
+	public boolean getBoxStatus() {
+		return this.chckbxShow.isSelected();
+	}
+
 }

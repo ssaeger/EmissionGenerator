@@ -1,4 +1,9 @@
-package data.model;
+package model;
+
+import movement.EatModel;
+import movement.MoveModel;
+import movement.Movementmodel;
+
 
 
 /**
@@ -33,7 +38,7 @@ public class ModelFactory {
 	 *            the id of the model
 	 * @return the created model
 	 */
-	public Model createModel(int id) {
+	public Movementmodel createModel(int id) {
 		String modelName = MODELLIST[id];
 		if (modelName.equals("MoveModel")) {
 			return new MoveModel(MODELLIST[id], id);

@@ -1,7 +1,9 @@
-package data;
+package movement;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+
+
 
 /**
  * This class contains the movementsequence and functions to create and modify

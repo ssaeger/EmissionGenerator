@@ -1,8 +1,8 @@
-package data.model;
+package movement;
 
-import data.Movementsequence;
 
-public abstract class Model {
+
+public abstract class Movementmodel {
 
 	String name;
 	int id;

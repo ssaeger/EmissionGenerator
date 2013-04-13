@@ -1,4 +1,4 @@
-package data;
+package movement;
 
 /**
  * This class represents a single move.
