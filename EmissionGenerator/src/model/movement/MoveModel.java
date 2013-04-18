@@ -2,11 +2,8 @@ package model.movement;
 
 import java.security.GeneralSecurityException;
 
-
-
 import org.uncommons.maths.random.AESCounterRNG;
 import org.uncommons.maths.random.ExponentialGenerator;
-
 
 /**
  * This class represents a model which generates a particular movementsequence.

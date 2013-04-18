@@ -14,6 +14,9 @@ public class Move {
 	private final double x;
 	private final double y;
 
+	private final double angle;
+	private final double length;
+
 	/**
 	 * Creates a new move with the given x and y values.
 	 * 
@@ -23,8 +26,32 @@ public class Move {
 	 *            y-value of the movementvector
 	 */
 	public Move(double x, double y) {
+		// only two decimal places
 		this.x = Math.rint(x * 100) / 100;
 		this.y = Math.rint(y * 100) / 100;
+		this.length = Math
+				.rint(Math.sqrt(this.x * this.x + this.y * this.y) * 100) / 100;
+		this.angle = Math.toDegrees(Math.atan2(this.y, this.x));
+	}
+
+	/**
+	 * Creates a new move with the given angle and length.
+	 * 
+	 * @param angle
+	 *            angle of the movementvector
+	 * @param length
+	 *            length of the movementvector
+	 * @param polarcoordinate
+	 *            doesn't matter if true or false, does nothing, only because
+	 *            the signaturs of the two constructores are otherwiese the
+	 *            same.
+	 */
+	public Move(double angle, double length, boolean polarcoordinate) {
+		// only two decimal places
+		this.x = Math.rint(length * Math.cos(Math.toRadians(angle)) * 100) / 100;
+		this.y = Math.rint(length * Math.sin(Math.toRadians(angle)) * 100) / 100;
+		this.length = Math.rint(length * 100) / 100;
+		this.angle = Math.rint(angle * 100) / 100;
 	}
 
 	/**
