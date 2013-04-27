@@ -29,7 +29,7 @@ public class MoveModel extends Movementmodel {
 			rnd = new AESCounterRNG();
 			expGen = new ExponentialGenerator(1, rnd);
 			int steps;
-			for (int i = 0; i < size;) {
+			for (int i = 0; i <= size;) {
 				// generate number of steps with the same move
 				steps = (int) Math.round(expGen.nextValue());
 
