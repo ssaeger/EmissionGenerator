@@ -231,17 +231,33 @@ public class EmissionsequenceModel implements IEmissionsequenceModel {
 		return emissionArray;
 	}
 
+	// old function
+	// @Override
+	// public EmissionsequenceModel interfereWith(NumberGenerator<?> confounder)
+	// {
+	// LinkedList<Integer> interferedSequence = new LinkedList<>();
+	// int tmpEmission;
+	// for (Integer i : this.sequence) {
+	// tmpEmission = i + confounder.nextValue().intValue();
+	// if (tmpEmission >= EMISSIONCOUNT) {
+	// // -1 because 21 emissions, but highest id is 20
+	// tmpEmission = EMISSIONCOUNT - 1;
+	// } else if (tmpEmission < 0) {
+	// tmpEmission = 0;
+	// }
+	// interferedSequence.add(tmpEmission);
+	// }
+	// return new EmissionsequenceModel(interferedSequence);
+	// }
+
 	@Override
 	public EmissionsequenceModel interfereWith(NumberGenerator<?> confounder) {
 		LinkedList<Integer> interferedSequence = new LinkedList<>();
 		int tmpEmission;
 		for (Integer i : this.sequence) {
 			tmpEmission = i + confounder.nextValue().intValue();
-			if (tmpEmission >= EMISSIONCOUNT) {
-				// -1 because 21 emissions, but highest id is 20
-				tmpEmission = EMISSIONCOUNT - 1;
-			} else if (tmpEmission < 0) {
-				tmpEmission = 0;
+			while (tmpEmission >= EMISSIONCOUNT || tmpEmission < 0) {
+				tmpEmission = i + confounder.nextValue().intValue();
 			}
 			interferedSequence.add(tmpEmission);
 		}

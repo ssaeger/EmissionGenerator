@@ -14,8 +14,16 @@ import org.uncommons.maths.random.GaussianGenerator;
  */
 public class ConfounderFactory {
 	public static final String[] CONFOUNDERLIST = {
-			"Normal distribution, \u03C3 = 1",
-			"Normal distribution, \u03C3 = 2" };
+			"Normal distribution, \u03C3 = 1.0",
+			"Normal distribution, \u03C3 = 2.0",
+			"Normal distribution, \u03C3 = 5.0",
+			"Normal distribution, \u03C3 = 10.0",
+			"Normal distribution, \u03C3 = 15.0",
+			"Normal distribution, \u03C3 = 16.0",
+			"Normal distribution, \u03C3 = 17.0",
+			"Normal distribution, \u03C3 = 18.0",
+			"Normal distribution, \u03C3 = 19.0",
+			"Normal distribution, \u03C3 = 20.0" };
 
 	private static ConfounderFactory instance;
 
@@ -38,14 +46,29 @@ public class ConfounderFactory {
 	 */
 	public NumberGenerator<?> createConfounder(int id) {
 		String confounderName = CONFOUNDERLIST[id];
-		if (confounderName.equals("Normal distribution, \u03C3 = 1")) {
+		switch (confounderName) {
+		case "Normal distribution, \u03C3 = 1.0":
 			return new GaussianGenerator(0, 1, new Random());
-		} else if (confounderName.equals("Normal distribution, \u03C3 = 2")) {
-			return new GaussianGenerator(0, 2, new Random());
-		} else {
+		case "Normal distribution, \u03C3 = 2.0":
+			return new GaussianGenerator(0, 2.0, new Random());
+		case "Normal distribution, \u03C3 = 5.0":
+			return new GaussianGenerator(0, 5.0, new Random());
+		case "Normal distribution, \u03C3 = 10.0":
+			return new GaussianGenerator(0, 10.0, new Random());
+		case "Normal distribution, \u03C3 = 15.0":
+			return new GaussianGenerator(0, 15.0, new Random());
+		case "Normal distribution, \u03C3 = 16.0":
+			return new GaussianGenerator(0, 16.0, new Random());
+		case "Normal distribution, \u03C3 = 17.0":
+			return new GaussianGenerator(0, 17.0, new Random());
+		case "Normal distribution, \u03C3 = 18.0":
+			return new GaussianGenerator(0, 18.0, new Random());
+		case "Normal distribution, \u03C3 = 19.0":
+			return new GaussianGenerator(0, 19.0, new Random());
+		case "Normal distribution, \u03C3 = 20.0":
+			return new GaussianGenerator(0, 20.0, new Random());
+		default:
 			throw new IllegalArgumentException("Wrong confounder number!");
 		}
-
 	}
-
 }
