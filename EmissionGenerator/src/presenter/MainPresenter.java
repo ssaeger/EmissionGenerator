@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Random;
 import java.util.Scanner;
 
 import javax.swing.JFileChooser;
@@ -23,6 +24,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.statistics.HistogramDataset;
 import org.jfree.data.statistics.HistogramType;
 import org.uncommons.maths.number.NumberGenerator;
+import org.uncommons.maths.random.GaussianGenerator;
 
 import view.HistogramView;
 import view.IMainView;
@@ -75,6 +77,26 @@ public class MainPresenter implements IMainPresenter {
 		}
 	}
 
+	// @Override
+	// public void saveEmissionsequenceToFile(ActionEvent e) {
+	// JFileChooser fc = new JFileChooser();
+	//
+	// if (fc.showSaveDialog((Component) e.getSource()) ==
+	// JFileChooser.APPROVE_OPTION) {
+	// File file = fc.getSelectedFile();
+	// try {
+	// FileWriter fw = new FileWriter(file);
+	// fw.write(this.emissionsequenceModel.toString());
+	// fw.flush();
+	// fw.close();
+	// this.displayStatus("File was written successfully!");
+	// } catch (IOException e1) {
+	// // TODO Auto-generated catch block
+	// e1.printStackTrace();
+	// }
+	// }
+	// }
+
 	@Override
 	public void saveEmissionsequenceToFile(ActionEvent e) {
 		JFileChooser fc = new JFileChooser();
@@ -82,11 +104,32 @@ public class MainPresenter implements IMainPresenter {
 		if (fc.showSaveDialog((Component) e.getSource()) == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
 			try {
+				double[] stds = { 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 };
+
+				// file
 				FileWriter fw = new FileWriter(file);
 				fw.write(this.emissionsequenceModel.toString());
 				fw.flush();
 				fw.close();
-				this.displayStatus("File was written successfully!");
+
+				for (double d : stds) {
+					fw = new FileWriter(file.getParentFile().getAbsolutePath()
+							+ "\\"
+							+ file.getName().subSequence(0,
+									file.getName().indexOf("k") + 1)
+							+ (int) d
+							+ "n"
+							+ file.getName().subSequence(
+									file.getName().indexOf("k") + 1,
+									file.getName().length()));
+					fw.write(this.emissionsequenceModel.interfereWith(
+							new GaussianGenerator(0, d, new Random()))
+							.toString());
+					fw.flush();
+					fw.close();
+				}
+				this.displayStatus("Files were written successfully!");
+
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

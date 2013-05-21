@@ -23,7 +23,8 @@ public class ConfounderFactory {
 			"Normal distribution, \u03C3 = 17.0",
 			"Normal distribution, \u03C3 = 18.0",
 			"Normal distribution, \u03C3 = 19.0",
-			"Normal distribution, \u03C3 = 20.0" };
+			"Normal distribution, \u03C3 = 20.0",
+			"Normal distribution, \u03C3 = 50.0" };
 
 	private static ConfounderFactory instance;
 
@@ -67,6 +68,8 @@ public class ConfounderFactory {
 			return new GaussianGenerator(0, 19.0, new Random());
 		case "Normal distribution, \u03C3 = 20.0":
 			return new GaussianGenerator(0, 20.0, new Random());
+		case "Normal distribution, \u03C3 = 50.0":
+			return new GaussianGenerator(0, 50.0, new Random());
 		default:
 			throw new IllegalArgumentException("Wrong confounder number!");
 		}
