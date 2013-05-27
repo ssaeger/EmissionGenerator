@@ -44,6 +44,10 @@ public class Movementsequence {
 		return this.sequence;
 	}
 
+	public int size() {
+		return this.sequence.size();
+	}
+
 	@Override
 	public String toString() {
 		String s = "";

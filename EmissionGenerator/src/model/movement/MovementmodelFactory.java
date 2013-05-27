@@ -1,8 +1,5 @@
 package model.movement;
 
-
-
-
 /**
  * This class is a factory which creates the selected model. It's implemented as
  * a sigleton.
@@ -37,11 +34,12 @@ public class MovementmodelFactory {
 	 */
 	public Movementmodel createModel(int id) {
 		String modelName = MODELLIST[id];
-		if (modelName.equals("MoveModel")) {
+		switch (modelName) {
+		case "MoveModel":
 			return new MoveModel(MODELLIST[id], id);
-		} else if (modelName.equals("EatModel")) {
+		case "EatModel":
 			return new EatModel(MODELLIST[id], id);
-		} else {
+		default:
 			throw new IllegalArgumentException("Wrong model number!");
 		}
 	}

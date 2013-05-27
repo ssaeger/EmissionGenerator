@@ -2,11 +2,7 @@ package model.movement;
 
 import java.security.GeneralSecurityException;
 
-
-
 import org.uncommons.maths.random.AESCounterRNG;
-import org.uncommons.maths.random.ExponentialGenerator;
-
 
 /**
  * This class represents a model which generates a particular movementsequence.
@@ -21,29 +17,54 @@ public class EatModel extends Movementmodel {
 		this.id = id;
 	}
 
-	@Override
-	public Movementsequence generateMovementsequence(int size) {
-		ExponentialGenerator expGen;
-		Movementsequence moveSeq = new Movementsequence();
-		AESCounterRNG rnd;
-		Move aktMove;
+//	@Override
+//	public Movementsequence generateMovementsequence(int size) {
+//		Movementsequence moveSeq = new Movementsequence();
+//		AESCounterRNG rnd;
+//
+//		try {
+//			rnd = new AESCounterRNG();
+//			for (int i = 0; i <= size; i++) {
+//
+//				// generate and add current move
+//				moveSeq.addMove(new Move(rnd.nextDouble(), rnd.nextDouble()));
+//
+//			}
+//		} catch (GeneralSecurityException e1) {
+//			e1.printStackTrace();
+//		}
+//		return moveSeq;
+//	}
 
-		try {
-			rnd = new AESCounterRNG();
-			expGen = new ExponentialGenerator(1, rnd);
-			for (int i = 0; i <= size; i++) {
-				// generate current move
-				aktMove = new Move(rnd.nextDouble(), rnd.nextDouble());
-
-				// add current move
-				moveSeq.addMove(aktMove);
-
-			}
-		} catch (GeneralSecurityException e1) {
-			e1.printStackTrace();
-		}
-		return moveSeq;
-	}
+	 @Override
+	 public Movementsequence generateMovementsequence(int size) {
+	 Movementsequence moveSeq = new Movementsequence();
+	 AESCounterRNG rnd;
+	 double x;
+	 double y;
+	
+	 try {
+	 rnd = new AESCounterRNG();
+	 for (int i = 0; i <= size; i++) {
+	
+	 x = rnd.nextDouble();
+	 y = rnd.nextDouble();
+	 if ((int) (x * 100) % 2 == 0) {
+	 x *= -1;
+	 }
+	 if ((int) (y * 100) % 2 == 0) {
+	 y *= -1;
+	 }
+	
+	 // generate and add current move
+	 moveSeq.addMove(new Move(x, y));
+	
+	 }
+	 } catch (GeneralSecurityException e1) {
+	 e1.printStackTrace();
+	 }
+	 return moveSeq;
+	 }
 
 	@Override
 	public String getName() {

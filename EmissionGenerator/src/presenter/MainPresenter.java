@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Random;
 import java.util.Scanner;
 
 import javax.swing.JFileChooser;
@@ -24,7 +23,6 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.statistics.HistogramDataset;
 import org.jfree.data.statistics.HistogramType;
 import org.uncommons.maths.number.NumberGenerator;
-import org.uncommons.maths.random.GaussianGenerator;
 
 import view.HistogramView;
 import view.IMainView;
@@ -77,6 +75,79 @@ public class MainPresenter implements IMainPresenter {
 		}
 	}
 
+	@Override
+	public void saveEmissionsequenceToFile(ActionEvent e) {
+		JFileChooser fc = new JFileChooser();
+
+		if (fc.showSaveDialog((Component) e.getSource()) == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			try {
+				FileWriter fw = new FileWriter(file);
+				long before = System.nanoTime();
+				fw.write(this.emissionsequenceModel.toString());
+				long after = System.nanoTime();
+				this.displayStatus((after - before) / 1e9 + " ms");
+				fw.flush();
+				fw.close();
+				// this.displayStatus("File was written successfully!");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+
+	// @Override
+	// public void saveEmissionsequenceToFile(ActionEvent e) {
+	// JFileChooser fc = new JFileChooser();
+	//
+	// int confounder = 1;
+	// int count = 10;
+	//
+	// GaussianGenerator gNGR = new GaussianGenerator(0, confounder,
+	// new Random());
+	// Movementsequence mov;
+	// IEmissionsequenceModel emi = this.emissionsequenceModel;
+	// if (fc.showSaveDialog((Component) e.getSource()) ==
+	// JFileChooser.APPROVE_OPTION) {
+	// File file = fc.getSelectedFile();
+	// try {
+	// FileWriter fw = new FileWriter(file);
+	// for (int i = 0; i < count; i++) {
+	// fw = new FileWriter(file.getParentFile().getAbsolutePath()
+	// + "\\"
+	// + file.getName().subSequence(0,
+	// file.getName().indexOf("_") + 1)
+	// + (Integer.parseInt(file.getName().substring(
+	// file.getName().indexOf("_") + 1)) + i));
+	// fw.write(emi.toString());
+	// fw.flush();
+	// fw.close();
+	// fw = new FileWriter(file.getParentFile().getAbsolutePath()
+	// + "\\"
+	// + file.getName().subSequence(0,
+	// file.getName().indexOf("_"))
+	// + confounder
+	// + "n_"
+	// + (Integer.parseInt(file.getName().substring(
+	// file.getName().indexOf("_") + 1)) + i));
+	//
+	// fw.write(emi.interfereWith(gNGR).toString());
+	// fw.flush();
+	// fw.close();
+	// mov = new Movementsequence();
+	// mov = this.model.generateMovementsequence(this.movSeq
+	// .size());
+	// emi = new EmissionsequenceModel(mov);
+	// }
+	// this.displayStatus("Files were written successfully!");
+	// } catch (IOException e1) {
+	// // TODO Auto-generated catch block
+	// e1.printStackTrace();
+	// }
+	// }
+	// }
+
 	// @Override
 	// public void saveEmissionsequenceToFile(ActionEvent e) {
 	// JFileChooser fc = new JFileChooser();
@@ -85,57 +156,38 @@ public class MainPresenter implements IMainPresenter {
 	// JFileChooser.APPROVE_OPTION) {
 	// File file = fc.getSelectedFile();
 	// try {
+	// double[] stds = { 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 };
+	//
+	// // file
 	// FileWriter fw = new FileWriter(file);
 	// fw.write(this.emissionsequenceModel.toString());
 	// fw.flush();
 	// fw.close();
-	// this.displayStatus("File was written successfully!");
+	//
+	// for (double d : stds) {
+	// fw = new FileWriter(file.getParentFile().getAbsolutePath()
+	// + "\\"
+	// + file.getName().subSequence(0,
+	// file.getName().indexOf("k") + 1)
+	// + (int) d
+	// + "n"
+	// + file.getName().subSequence(
+	// file.getName().indexOf("k") + 1,
+	// file.getName().length()));
+	// fw.write(this.emissionsequenceModel.interfereWith(
+	// new GaussianGenerator(0, d, new Random()))
+	// .toString());
+	// fw.flush();
+	// fw.close();
+	// }
+	// this.displayStatus("Files were written successfully!");
+	//
 	// } catch (IOException e1) {
 	// // TODO Auto-generated catch block
 	// e1.printStackTrace();
 	// }
 	// }
 	// }
-
-	@Override
-	public void saveEmissionsequenceToFile(ActionEvent e) {
-		JFileChooser fc = new JFileChooser();
-
-		if (fc.showSaveDialog((Component) e.getSource()) == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			try {
-				double[] stds = { 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 };
-
-				// file
-				FileWriter fw = new FileWriter(file);
-				fw.write(this.emissionsequenceModel.toString());
-				fw.flush();
-				fw.close();
-
-				for (double d : stds) {
-					fw = new FileWriter(file.getParentFile().getAbsolutePath()
-							+ "\\"
-							+ file.getName().subSequence(0,
-									file.getName().indexOf("k") + 1)
-							+ (int) d
-							+ "n"
-							+ file.getName().subSequence(
-									file.getName().indexOf("k") + 1,
-									file.getName().length()));
-					fw.write(this.emissionsequenceModel.interfereWith(
-							new GaussianGenerator(0, d, new Random()))
-							.toString());
-					fw.flush();
-					fw.close();
-				}
-				this.displayStatus("Files were written successfully!");
-
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-	}
 
 	@Override
 	public void loadEmissionsequenceFromFile(ActionEvent e) {

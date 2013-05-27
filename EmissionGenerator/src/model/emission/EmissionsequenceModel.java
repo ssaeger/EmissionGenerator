@@ -388,15 +388,16 @@ public class EmissionsequenceModel implements IEmissionsequenceModel {
 
 	@Override
 	public String toString() {
-		String s = "";
+		StringBuilder s = new StringBuilder();
 		Iterator<Integer> iterator = this.sequence.iterator();
 
-		s += "\"" + iterator.next() + "\"";
+		s.append("\"" + iterator.next() + "\"");
 
 		while (iterator.hasNext()) {
-			s += ",\"" + String.valueOf(iterator.next()) + "\"";
+			s.append(",\"" + String.valueOf(iterator.next()) + "\"");
 		}
-		return s + "\n";
+		s.append("\n");
+		return s.toString();
 	}
 
 }
