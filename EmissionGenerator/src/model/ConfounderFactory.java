@@ -19,10 +19,6 @@ public class ConfounderFactory {
 			"Normal distribution, \u03C3 = 5.0",
 			"Normal distribution, \u03C3 = 10.0",
 			"Normal distribution, \u03C3 = 15.0",
-			"Normal distribution, \u03C3 = 16.0",
-			"Normal distribution, \u03C3 = 17.0",
-			"Normal distribution, \u03C3 = 18.0",
-			"Normal distribution, \u03C3 = 19.0",
 			"Normal distribution, \u03C3 = 20.0",
 			"Normal distribution, \u03C3 = 50.0" };
 
@@ -58,14 +54,6 @@ public class ConfounderFactory {
 			return new GaussianGenerator(0, 10.0, new Random());
 		case "Normal distribution, \u03C3 = 15.0":
 			return new GaussianGenerator(0, 15.0, new Random());
-		case "Normal distribution, \u03C3 = 16.0":
-			return new GaussianGenerator(0, 16.0, new Random());
-		case "Normal distribution, \u03C3 = 17.0":
-			return new GaussianGenerator(0, 17.0, new Random());
-		case "Normal distribution, \u03C3 = 18.0":
-			return new GaussianGenerator(0, 18.0, new Random());
-		case "Normal distribution, \u03C3 = 19.0":
-			return new GaussianGenerator(0, 19.0, new Random());
 		case "Normal distribution, \u03C3 = 20.0":
 			return new GaussianGenerator(0, 20.0, new Random());
 		case "Normal distribution, \u03C3 = 50.0":
