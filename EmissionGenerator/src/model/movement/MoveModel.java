@@ -53,50 +53,6 @@ public class MoveModel extends Movementmodel {
 		return moveSeq;
 	}
 
-	// @Override
-	// public Movementsequence generateMovementsequence(int size) {
-	// ExponentialGenerator expGen;
-	// Movementsequence moveSeq = new Movementsequence();
-	// AESCounterRNG rnd;
-	// Move aktMove;
-	// double x;
-	// double y;
-	//
-	// try {
-	// rnd = new AESCounterRNG();
-	// expGen = new ExponentialGenerator(1, rnd);
-	// int steps;
-	// for (int i = 0; i <= size;) {
-	// // generate number of steps with the same move
-	// steps = (int) Math.round(expGen.nextValue());
-	//
-	// x = rnd.nextDouble();
-	// y = rnd.nextDouble();
-	// if ((int) (x * 100) % 2 == 0) {
-	// x *= -1;
-	// }
-	// if ((int) (y * 100) % 2 == 0) {
-	// y *= -1;
-	// }
-	// // generate current move
-	// aktMove = new Move(x, y);
-	//
-	// // add current move
-	// for (int j = 0; j < steps && i < size; j++) {
-	// moveSeq.addMove(aktMove);
-	// i++;
-	// }
-	// // before generation of a new move slow down the old move
-	// // +1 to avoid a move with (0,0)
-	// moveSeq.addMove(aktMove.divideBy(rnd.nextInt(3) + 1));
-	// i++;
-	// }
-	// } catch (GeneralSecurityException e1) {
-	// e1.printStackTrace();
-	// }
-	// return moveSeq;
-	// }
-
 	@Override
 	public String getName() {
 		return this.name;

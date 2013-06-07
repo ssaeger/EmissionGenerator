@@ -83,13 +83,10 @@ public class MainPresenter implements IMainPresenter {
 			File file = fc.getSelectedFile();
 			try {
 				FileWriter fw = new FileWriter(file);
-				long before = System.nanoTime();
 				fw.write(this.emissionsequenceModel.toString());
-				long after = System.nanoTime();
-				this.displayStatus((after - before) / 1e9 + " ms");
 				fw.flush();
 				fw.close();
-				// this.displayStatus("File was written successfully!");
+				this.displayStatus("File was written successfully!");
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
