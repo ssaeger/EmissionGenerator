@@ -41,6 +41,18 @@ Then you just have to run the EmissionGenerator.jar
 
 (e.g. on a system with ubuntu use the following command: EmissionGenerator/EmissionGenerator.jar)
 
+Example Workflow
+================
+
+1. Select a model
+2. Select the desired length of the sequence
+3. Click 'Generate!' to generate the sequence
+4. Select a desired confounder and click 'Interfere' to add some noise to the sequence
+5. Click the 'save...' button to save the sequence of emissions (Emissionsequence) (it is also possible to save the internal sequence of movement vetors (Movementsequence))
+6. With the button 'Stochstic matrix' you can see the transition matrix between the different emissions
+7. With the button 'Histogram' you can see a histogram for the distribution of the emissions in the sequence
+
+
 Contributing
 ============
 
